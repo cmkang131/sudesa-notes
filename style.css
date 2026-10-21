@@ -144,7 +144,7 @@ body{background:#fff;color:#000}
 a.to-home{font-family:inherit;font-size:13.5px;color:#333}
 a.to-home:hover{color:#000}
 /* 문제 박스: 검정 얇은 테두리 직사각형 */
-.problem{border:1px solid #000;border-radius:0;padding:14px 20px;background:transparent}
+.problem{border:none;border-top:1px solid #000;border-bottom:1px solid #000;border-radius:0;padding:12px 2px;margin:14px 0;background:transparent}
 .prob-no{font-family:inherit;font-weight:800;font-size:16.5px;color:#000;text-decoration:none;margin-bottom:8px}
 /* 섹션: 얇은 검정 선으로 구분 */
 section.part{margin-top:24px}
@@ -177,8 +177,8 @@ h1.t-title{font-family:inherit;font-size:30px;font-weight:800;color:#000;text-de
 .pnav a{color:#333}
 /* ================= 수데사 v11: 검정 박스 필기 스타일 ================= */
 /* 박스/카드 — 전부 흰 배경, 검정 테두리만 */
-.bx{border-radius:12px;padding:16px 22px 14px;margin:16px 0;border:1.5px solid #1a1a1a;background:#fff}
-.bx-tag{display:inline-block;font-weight:800;font-size:12.5px;letter-spacing:.03em;border-radius:7px;padding:3px 11px;margin-bottom:10px;line-height:1.4;background:#1a1a1a;color:#fff}
+.bx{border:1.5px solid #1a1a1a;border-radius:12px;background:#fff;padding:14px 20px 12px;margin:14px 0}
+
 .bx-title{font-weight:800;font-size:16.5px;margin:2px 0 8px;color:var(--ink);line-height:1.5}
 .bx ul{margin:.25em 0}
 .bx p{margin:.3em 0}
@@ -189,18 +189,22 @@ h1.t-title{font-family:inherit;font-size:30px;font-weight:800;color:#000;text-de
 .fbox{border-color:#1a1a1a}
 /* 소제목 */
 .notes h2.bx-h{border-bottom:none;margin:26px 0 4px;padding-bottom:0}
+.sec{border-top:1px solid var(--rule);margin:24px 0 0;padding-top:16px}
+.sec:first-of-type{border-top:none;margin-top:8px;padding-top:0}
+p.plain-note{margin:.45em 0 .45em 0;line-height:1.55}
 /* 번호 스텝 풀이 */
 .steps{list-style:none;counter-reset:step;margin:10px 0;padding:0}
-.steps>li{counter-increment:step;position:relative;padding:8px 0 8px 64px;margin:2px 0;border-bottom:1px dashed #e6e8f0;line-height:1.7}
+.steps>li{counter-increment:step;position:relative;padding:6px 0 6px 58px;margin:2px 0;border-bottom:1px solid #e2e4ea;line-height:1.7}
 .steps>li:last-child{border-bottom:none}
-.steps>li::before{content:"Step " counter(step);position:absolute;left:0;top:10px;background:#23262e;color:#fff;font-weight:800;font-size:11.5px;border-radius:7px;padding:2.5px 9px;letter-spacing:.02em}
+.steps>li::before{content:"STEP " counter(step);position:absolute;left:0;top:8px;color:var(--blue);font-weight:700;font-size:12.5px}
 .steps .why-step{color:#6a7080;font-size:13.5px}
 /* 최종 답: 흰 배경 검정 상자 */
 .final-answer{background:#fff;border:1.5px solid #1a1a1a;border-radius:10px;padding:10px 16px;margin:12px 0 4px}
-.final-answer .fa-tag{font-weight:800;font-size:12.5px;color:#1a1a1a;letter-spacing:.03em;display:block;margin-bottom:2px}
+.final-answer .fa-tag{font-weight:800;font-size:12.5px;color:#1a1a1a;display:block;margin-bottom:2px}
+
 /* 그림 */
 .figwrap{margin:14px 0;text-align:center}
 .figwrap svg{max-width:min(640px,94%);height:auto}
 .figcap{font-size:13px;color:#5c6270;text-align:center;margin-top:8px}
 .why-inline{color:#64748b;font-size:.93em}
-@media (max-width:760px){.bx{padding:13px 16px 11px}.steps>li{padding-left:56px}}
+@media (max-width:760px){.bx{padding:12px 14px 10px}.steps>li{padding-left:56px}}
