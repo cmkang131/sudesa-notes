@@ -260,3 +260,36 @@ p.plain-note{margin:.45em 0 .45em 0;line-height:1.55}
 .notes a,.body a,.concept a,.step-body a,.figcap a,.refline a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
 .notes a:hover,.body a:hover{color:var(--accent)}
 a{color:var(--ink)}
+/* v3.2 dark mode: invert + hue-rotate keeps accent red as red; backgrounds set so result is #121212 */
+html[data-theme="dark"]{filter:invert(1) hue-rotate(180deg);background:#ededed}
+html[data-theme="dark"] body,html[data-theme="dark"] .paper{background:#ededed}
+html[data-theme="dark"] svg,html[data-theme="dark"] figure{background:transparent}
+.theme-toggle{position:fixed;top:10px;right:12px;z-index:50;font:500 12px 'Noto Sans KR',sans-serif;color:#1a1a1a;background:#fff;border:1px solid #1a1a1a;border-radius:4px;padding:3px 9px;cursor:pointer}
+html[data-theme="dark"] .theme-toggle{background:#fff}
+@media print{html[data-theme="dark"]{filter:none;background:#fff}html[data-theme="dark"] body,html[data-theme="dark"] .paper{background:#fff}.theme-toggle{display:none}}
+
+html[data-theme="dark"] .nb,html[data-theme="dark"] .bx,html[data-theme="dark"] .fbox,html[data-theme="dark"] table,html[data-theme="dark"] figure{background:#ededed}
+html[data-theme="dark"] svg [fill="#fff"],html[data-theme="dark"] svg [fill="#ffffff"]{fill:#ededed}
+html[data-theme="dark"] svg [fill="#f2f2f2"]{fill:#e0e0e0}
+
+/* v3.1 additions */
+.notes dl.def{margin:14px 0;border-top:1.5px solid var(--rule);border-bottom:1.5px solid var(--rule)}
+.notes dl.def>div{display:grid;grid-template-columns:8.5em 1fr;gap:0 18px;padding:9px 2px;border-top:1px solid #e2e2e2}
+.notes dl.def>div:first-child{border-top:none}
+.notes dl.def dt{font-weight:700;font-size:15px;line-height:1.7}
+.notes dl.def dd{margin:0;line-height:1.75}
+.notes p.lead{font-weight:700;font-size:16.5px;line-height:1.7;margin:.5em 0 .9em;padding-left:12px;border-left:3px solid var(--ink)}
+.notes ol.steps{list-style:none;counter-reset:st;padding-left:0;margin:.8em 0}
+.notes ol.steps li{counter-increment:st;position:relative;padding-left:2.4em;margin:.7em 0;line-height:1.75}
+.notes ol.steps li::before{content:counter(st);position:absolute;left:0;top:.2em;width:1.6em;height:1.6em;border:1.3px solid var(--ink);border-radius:50%;text-align:center;font-size:12.5px;font-weight:700;line-height:1.5em}
+@media(max-width:560px){.notes dl.def>div{grid-template-columns:1fr}.notes dl.def dt{margin-bottom:0}}
+
+.notes dl.def.sum>div{grid-template-columns:11em 1fr;padding:7px 2px}
+.notes dl.def.sum dt{font-weight:700;font-size:14.5px}
+.notes dl.def.sum dd{font-size:15px;line-height:1.7}
+.notes .fbox{margin:10px 0}
+@media(max-width:560px){.notes dl.def.sum>div{grid-template-columns:1fr}}
+
+/* link-state color fix: never UA blue/purple (2026-10-22) */
+a,a:link,a:visited,a:active{color:var(--ink,#1a1a1a)}
+a:hover{color:var(--accent,#9e2b25)}
