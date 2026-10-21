@@ -208,3 +208,9 @@ p.plain-note{margin:.45em 0 .45em 0;line-height:1.55}
 .figcap{font-size:13px;color:#5c6270;text-align:center;margin-top:8px}
 .why-inline{color:#64748b;font-size:.93em}
 @media (max-width:760px){.bx{padding:12px 14px 10px}.steps>li{padding-left:56px}}
+
+/* 데이터 표 */
+.tbl{border-collapse:collapse;margin:10px 0;font-size:14.5px}
+.tbl th,.tbl td{padding:4px 16px;text-align:center}
+.tbl thead th{border-top:1px solid #000;border-bottom:1px solid #000;font-weight:700}
+.tbl tbody tr:last-child td{border-bottom:1px solid #000}
