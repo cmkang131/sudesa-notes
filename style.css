@@ -3,7 +3,7 @@
 @font-face{font-family:'Caveat';src:url(fonts/caveat.woff) format('woff');font-weight:400 700;font-display:swap}
 @font-face{font-family:'Noto Sans KR';src:url(fonts/noto400.woff) format('woff');font-weight:400;font-display:swap}
 @font-face{font-family:'Noto Sans KR';src:url(fonts/noto700.woff) format('woff');font-weight:700;font-display:swap}
-:root{--ink:#23262e;--red:#b03a32;--gray:#8a8f9c;--paper:#fffef9;--line:#e9e9e9;--blue:#2456c4}
+:root{--ink:#23262e;--red:#b03a32;--gray:#8a8f9c;--paper:#fffef9;--line:#e9e9e9}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:'Noto Sans KR','Apple SD Gothic Neo',system-ui,sans-serif;background:#f2f0ea;color:var(--ink);-webkit-tap-highlight-color:transparent}
@@ -30,7 +30,6 @@ section.part{margin-top:30px}
 .plan{margin-top:16px}
 .plan-label{font-family:'Caveat','Nanum Pen',cursive;font-weight:700;font-size:19px;color:var(--ink);text-decoration:underline wavy;text-decoration-color:rgba(90,95,110,.55);text-decoration-thickness:2px;text-underline-offset:6px;margin-bottom:6px}
 .concept-title{font-family:'Caveat','Nanum Pen',cursive;font-weight:700;font-size:21px;text-decoration:underline wavy;text-decoration-thickness:2px;text-underline-offset:6px;margin-bottom:10px;color:var(--ink);text-decoration-color:rgba(90,95,110,.55)}
-.concept-title.blue{color:var(--blue);text-decoration-color:rgba(36,86,196,.5)}
 .ref{font-size:12.5px;color:var(--gray);margin:-4px 0 10px}
 .concept ul{margin-left:.4em;list-style:none}
 .concept li{margin:.14em 0;font-size:15.5px;padding-left:1.1em;position:relative}
@@ -98,7 +97,6 @@ h1.t-title{font-family:'Caveat','Nanum Pen',cursive;font-size:42px;line-height:1
 .notes ol{margin:.25em 0;padding-left:1.7em}
 .notes ol li{margin:.2em 0;line-height:1.65}
 .notes ol ol{list-style:lower-alpha}
-.k-blue{color:var(--blue);font-weight:700}
 .k-red{color:var(--red);font-weight:700}
 .hl{background:#fff1a8;padding:.02em .18em;border-radius:2px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
 .fbox{border:1.5px solid var(--rule);padding:10px 16px;margin:12px 0;background:#fff}
@@ -127,7 +125,7 @@ h1.t-title{font-family:'Caveat','Nanum Pen',cursive;font-size:42px;line-height:1
 /* STEP (풀이 단계) */
 .step{margin:12px 0;padding-left:12px;border-left:2px solid #1a1a1a}
 .step-head{display:flex;align-items:baseline;gap:8px;margin-bottom:3px}
-.step-no{font-size:12.5px;font-weight:700;color:var(--blue)}
+.step-no{font-size:12.5px;font-weight:700;color:var(--gray)}
 .step-title{font-weight:700;font-size:13.5px}
 .step-body{font-size:13.5px}
 .step-body p:first-child{margin-top:2px}
@@ -150,7 +148,6 @@ a.to-home:hover{color:#000}
 section.part{margin-top:24px}
 section.part+section.part{border-top:1px solid #000;padding-top:16px}
 .concept-title,.sol-tag{font-family:inherit;font-size:16px;font-weight:800;text-decoration:none;color:#000;display:block;border-bottom:none;padding-bottom:0;margin-bottom:8px;line-height:1.5}
-.concept-title.blue{color:var(--blue)}
 .ref{font-size:12.5px;color:#666;margin:-2px 0 8px}
 /* a/b/c/d 구분선 */
 .partdiv{border-top:1px solid #777;margin-top:14px;padding-top:10px}
@@ -196,7 +193,7 @@ p.plain-note{margin:.45em 0 .45em 0;line-height:1.55}
 .steps{list-style:none;counter-reset:step;margin:10px 0;padding:0}
 .steps>li{counter-increment:step;position:relative;padding:6px 0 6px 58px;margin:2px 0;border-bottom:1px solid #e2e4ea;line-height:1.7}
 .steps>li:last-child{border-bottom:none}
-.steps>li::before{content:"STEP " counter(step);position:absolute;left:0;top:8px;color:var(--blue);font-weight:700;font-size:12.5px}
+.steps>li::before{content:"STEP " counter(step);position:absolute;left:0;top:8px;color:var(--gray);font-weight:700;font-size:12.5px}
 .steps .why-step{color:#6a7080;font-size:13.5px}
 /* 최종 답: 흰 배경 검정 상자 */
 .final-answer{background:#fff;border:1.5px solid #1a1a1a;border-radius:10px;padding:10px 16px;margin:12px 0 4px}
@@ -206,7 +203,7 @@ p.plain-note{margin:.45em 0 .45em 0;line-height:1.55}
 .figwrap{margin:14px 0;text-align:center}
 .figwrap svg{max-width:min(640px,94%);height:auto}
 .figcap{font-size:13px;color:#5c6270;text-align:center;margin-top:8px}
-.why-inline{color:#64748b;font-size:.93em}
+.why-inline{color:#666666;font-size:.93em}
 @media (max-width:760px){.bx{padding:12px 14px 10px}.steps>li{padding-left:56px}}
 
 /* 데이터 표 */
@@ -214,3 +211,52 @@ p.plain-note{margin:.45em 0 .45em 0;line-height:1.55}
 .tbl th,.tbl td{padding:4px 16px;text-align:center}
 .tbl thead th{border-top:1px solid #000;border-bottom:1px solid #000;font-weight:700}
 .tbl tbody tr:last-child td{border-bottom:1px solid #000}
+
+/* ===== v3 이식 (2026-10-22): 팔레트 + 본문 가독성 =====
+   study-note kit v3 규칙을 이 사이트의 클래스 체계에 적용.
+   - 파랑·초록 폐기: 리드어는 볼드 검정(.lt), 강조 적색 #9e2b25는 섹션당 1곳
+   - 불릿 리듬, 표 여백, 디스플레이 수식 정렬은 kit v3 값 사용 */
+:root{
+  --ink:#1a1a1a;
+  --red:#9e2b25;
+  --gray:#666666;
+  --paper:#ffffff;
+  --line:#e2e2e2;
+  --hairline:#d9d9d9;
+  --accent:#9e2b25;
+}
+/* 굵은 본문은 검정 (빨강 남발 금지) */
+.body b{color:var(--ink)}
+.takeaway b{color:var(--ink)}
+/* v3 강조 클래스 */
+.k-red{color:var(--accent);font-weight:700}
+.lt{font-weight:700;color:var(--ink)}
+/* 불릿 리듬 (kit v3) */
+.notes ul li{margin:.55em 0;line-height:1.78}
+.notes ul ul{margin:.4em 0 .5em;padding-left:1.35em}
+.notes ul ul li{margin:.38em 0;line-height:1.7}
+.notes ul ul ul li{margin:.28em 0}
+.notes ol li{margin:.45em 0;line-height:1.78}
+.concept li{margin:.4em 0;line-height:1.75}
+.notes h2{margin:36px 0 12px}
+/* 표 (kit v3: 여백·크기) */
+.tbl{font-size:15px;font-variant-numeric:tabular-nums}
+.tbl th,.tbl td{padding:9px 12px;line-height:1.65}
+/* 디스플레이 수식 (kit v3) */
+.mjx-display{margin:.8em 0}
+.notes li .mjx-display,.bx li .mjx-display,.concept li .mjx-display,.step-body .mjx-display{text-align:left;margin:.55em 0}
+.notes li .mjx-display svg,.bx li .mjx-display svg,.concept li .mjx-display svg,.step-body .mjx-display svg{display:inline-block;margin:0}
+/* Step 번호는 회색 (파랑 금지) */
+.step-no{color:var(--gray)}
+.steps>li::before{color:var(--gray)}
+/* 가는 구분선 톤 */
+.idx-row{border-bottom:1px solid #d9d9d9}
+/* 박스 모서리: kit v3 값 */
+.bx{border-radius:6px}
+.eqbox{border-radius:4px}
+.final-answer{border-radius:6px}
+/* 홈 제목 밑줄 장식 제거는 v6에서 완료됨 */
+/* 본문 링크도 파랑 금지: 잉크 + 밑줄 */
+.notes a,.body a,.concept a,.step-body a,.figcap a,.refline a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
+.notes a:hover,.body a:hover{color:var(--accent)}
+a{color:var(--ink)}
