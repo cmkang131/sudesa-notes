@@ -37,7 +37,7 @@ section.part{margin-top:30px}
 .concept li::before{content:"–";position:absolute;left:.2em;color:#6a7080}
 .sol-tag{display:inline-block;font-family:'Caveat','Nanum Pen',cursive;font-weight:700;font-size:22px;color:var(--ink);margin-bottom:8px;text-decoration:underline wavy;text-decoration-color:rgba(90,95,110,.55);text-decoration-thickness:2px;text-underline-offset:6px}
 .part-lbl{font-family:'Caveat',cursive;color:var(--red);font-weight:700;font-size:1.15em}
-.why{color:#6a7080;font-size:14px;border-left:2px solid #d8dbe2;padding-left:12px;margin:.4em 0}
+.why{color:#6a7080;font-size:14px;border-left:2px solid #c9c9c9;padding-left:12px;margin:.4em 0}
 .figwrap{text-align:center;margin:10px 0}
 .figwrap svg{max-width:min(600px,92%);height:auto}
 .figcap{font-size:13.5px;color:#5c6270;text-align:center;margin-top:12px}
@@ -103,8 +103,8 @@ h1.t-title{font-family:'Caveat','Nanum Pen',cursive;font-size:42px;line-height:1
 .hl{background:#fff1a8;padding:.02em .18em;border-radius:2px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
 .fbox{border:1.5px solid var(--rule);padding:10px 16px;margin:12px 0;background:#fff}
 .fbox .mjx-display{margin:.15em 0}
-.def{border-left:3px solid var(--blue);padding:5px 0 5px 14px;margin:12px 0}
-.warn{border-left:3px solid var(--red);padding:5px 0 5px 14px;margin:12px 0}
+.def{border-left:3px solid #1a1a1a;padding:5px 0 5px 14px;margin:12px 0}
+.warn{border-left:3px solid #1a1a1a;padding:5px 0 5px 14px;margin:12px 0}
 .refline{font-size:12.5px;color:var(--gray);margin:2px 0 8px}
 .notes .problem b{color:var(--ink)}
 /* hint/answer plain toggles */
@@ -125,7 +125,7 @@ h1.t-title{font-family:'Caveat','Nanum Pen',cursive;font-size:42px;line-height:1
 }
 
 /* STEP (풀이 단계) */
-.step{margin:12px 0;padding-left:12px;border-left:2px solid #c9d4e8}
+.step{margin:12px 0;padding-left:12px;border-left:2px solid #1a1a1a}
 .step-head{display:flex;align-items:baseline;gap:8px;margin-bottom:3px}
 .step-no{font-size:12.5px;font-weight:700;color:var(--blue)}
 .step-title{font-weight:700;font-size:13.5px}
@@ -175,30 +175,19 @@ h1.t-title{font-family:inherit;font-size:30px;font-weight:800;color:#000;text-de
 .idx-num{color:#666}
 .pnav{font-family:inherit;border-top:1px solid #000;margin-top:36px}
 .pnav a{color:#333}
-
-/* ================= 수데사 v8: 손으로 정성들여 정리한 필기 스타일 ================= */
-/* 박스/카드 시스템 — 개념·정의·예시·주의·공식·핵심 */
-.bx{border-radius:12px;padding:16px 22px 14px;margin:16px 0;border:1px solid #e4e7f0;background:#fff;box-shadow:0 1px 4px rgba(30,34,45,.06)}
-.bx-tag{display:inline-flex;align-items:center;gap:6px;font-weight:800;font-size:12.5px;letter-spacing:.03em;border-radius:7px;padding:3px 11px;margin-bottom:10px;line-height:1.4}
+/* ================= 수데사 v11: 검정 박스 필기 스타일 ================= */
+/* 박스/카드 — 전부 흰 배경, 검정 테두리만 */
+.bx{border-radius:12px;padding:16px 22px 14px;margin:16px 0;border:1.5px solid #1a1a1a;background:#fff}
+.bx-tag{display:inline-block;font-weight:800;font-size:12.5px;letter-spacing:.03em;border-radius:7px;padding:3px 11px;margin-bottom:10px;line-height:1.4;background:#1a1a1a;color:#fff}
 .bx-title{font-weight:800;font-size:16.5px;margin:2px 0 8px;color:var(--ink);line-height:1.5}
-.bx-concept{background:#f2f7ff;border-color:#c7d8f8}
-.bx-concept>.bx-tag{background:#2456c4;color:#fff}
-.bx-define{background:#fff;border:1.5px solid #2456c4}
-.bx-define>.bx-tag{background:#fff;border:1.5px solid #2456c4;color:#2456c4}
-.bx-example{background:#f3faf3;border-color:#c8e5c9}
-.bx-example>.bx-tag{background:#2e7d43;color:#fff}
-.bx-warn{background:#fdf3f2;border-color:#f0ccc8}
-.bx-warn>.bx-tag{background:#b03a32;color:#fff}
-.bx-formula{background:#fff;border:1.5px solid #1a1a1a;box-shadow:3px 3px 0 rgba(26,26,26,.08)}
-.bx-formula>.bx-tag{background:#1a1a1a;color:#fff}
-.bx-key{background:#fffbe8;border-color:#eadf9a}
-.bx-key>.bx-tag{background:#f0c930;color:#1a1a1a}
-.bx-flow{background:#f6f4fb;border-color:#d9d2ee}
-.bx-flow>.bx-tag{background:#6554a8;color:#fff}
-/* 박스 안 목록 간격 */
 .bx ul{margin:.25em 0}
 .bx p{margin:.3em 0}
-/* 소제목 (박스 없이) */
+/* 표시수식도 검정 상자 안에 */
+.eqbox{border:1.5px solid #1a1a1a;border-radius:8px;background:#fff;padding:4px 14px;margin:10px 0}
+.eqbox .mjx-display{margin:.35em 0}
+/* fbox도 검정 */
+.fbox{border-color:#1a1a1a}
+/* 소제목 */
 .notes h2.bx-h{border-bottom:none;margin:26px 0 4px;padding-bottom:0}
 /* 번호 스텝 풀이 */
 .steps{list-style:none;counter-reset:step;margin:10px 0;padding:0}
@@ -206,17 +195,12 @@ h1.t-title{font-family:inherit;font-size:30px;font-weight:800;color:#000;text-de
 .steps>li:last-child{border-bottom:none}
 .steps>li::before{content:"Step " counter(step);position:absolute;left:0;top:10px;background:#23262e;color:#fff;font-weight:800;font-size:11.5px;border-radius:7px;padding:2.5px 9px;letter-spacing:.02em}
 .steps .why-step{color:#6a7080;font-size:13.5px}
-.final-answer{background:#fff1a8;border:1.5px solid #1a1a1a;border-radius:10px;padding:10px 16px;margin:12px 0 4px;box-shadow:2px 2px 0 rgba(26,26,26,.1)}
-.final-answer .fa-tag{font-weight:800;font-size:12.5px;color:#8a6d00;letter-spacing:.03em;display:block;margin-bottom:2px}
+/* 최종 답: 흰 배경 검정 상자 */
+.final-answer{background:#fff;border:1.5px solid #1a1a1a;border-radius:10px;padding:10px 16px;margin:12px 0 4px}
+.final-answer .fa-tag{font-weight:800;font-size:12.5px;color:#1a1a1a;letter-spacing:.03em;display:block;margin-bottom:2px}
 /* 그림 */
 .figwrap{margin:14px 0;text-align:center}
 .figwrap svg{max-width:min(640px,94%);height:auto}
 .figcap{font-size:13px;color:#5c6270;text-align:center;margin-top:8px}
-@media print{
-  .bx{box-shadow:none}
-}
-@media (max-width:760px){
-  .bx{padding:13px 16px 11px}
-  .steps>li{padding-left:56px}
-}
 .why-inline{color:#64748b;font-size:.93em}
+@media (max-width:760px){.bx{padding:13px 16px 11px}.steps>li{padding-left:56px}}
