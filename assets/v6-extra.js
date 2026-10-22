@@ -5,7 +5,7 @@
 (function(){
 "use strict";
 if(!window.V6){console.warn("v6-extra: V6 runtime missing");return;}
-var V6=window.V6, INK="#1a1a1a", RED="#9e2b25", G1="#6b6b6b", G2="#a8a5a0", G3="#d9d6cf", GRID="#ece9e3";
+var V6=window.V6, INK="#1a1a1a", RED="#9e2b25", G1="#1a1a1a", G2="#1a1a1a", G3="#e8e6e0", GRID="#e8e6e0";
 var FONT="'Noto Sans KR',sans-serif";
 var DPR=Math.max(1,Math.min(2,window.devicePixelRatio||1));
 var X={}; /* pure math, exposed as V6.x for self-checks */
@@ -14,17 +14,23 @@ V6.x=X;
 /* ---------- css (kept here so only this file is needed) ---------- */
 (function(){
   if(document.getElementById("v6x-css"))return;
-  var s=document.createElement("style");s.id="v6x-css";
+  var s=document.createElement("style");
+  s.id="v6x-css";
   s.textContent=
-  ".v6x-read{margin-top:8px;border-top:1px dashed #1a1a1a;padding-top:7px;font-size:12.5px;line-height:1.65;color:#1a1a1a;font-family:"+FONT+"}"+
-  ".v6x-read b{font-weight:700}.v6x-read .r{color:#9e2b25;font-weight:700}.v6x-read .m{color:#6b6b6b}"+
-  ".v6x-read table{border-collapse:collapse;margin:2px 0}.v6x-read td,.v6x-read th{border:1px solid #1a1a1a;padding:1px 8px;font-size:12.5px;font-variant-numeric:tabular-nums}"+
-  ".v6x-ctl select{font-family:inherit;font-size:12.5px;border:1.2px solid #1a1a1a;border-radius:3px;background:#fff;padding:1px 4px;color:#1a1a1a}"+
-  ".v6x-ctl input[type=checkbox]{accent-color:#1a1a1a}"+
-  ".v6x-ctl .v6-btn.on{background:#1a1a1a;color:#fff}"+
-  ".v6x-ctl label{white-space:nowrap}"+
-  ".v6x-cap{font-size:12px;color:#444;margin-top:6px;line-height:1.55}"+
-  ".v6x-ctl input[type=range]{width:150px}.v6-widget input[type=range],.v6-widget input[type=checkbox]{accent-color:#1a1a1a!important}.v6-widget{overflow:hidden}";
+    ".v6x-read{margin-top:8px;border-top:1px dashed #1a1a1a;padding-top:7px;font-size:13px;line-height:1.65;color:#1a1a1a;font-family:"+FONT+"}"+
+    ".v6x-read b{font-weight:700}.v6x-read .r{color:#9e2b25;font-weight:700}.v6x-read .m{color:#1a1a1a}"+
+    ".v6x-read table{border-collapse:collapse;margin:4px 0}.v6x-read td,.v6x-read th{border:1px solid #1a1a1a;padding:3px 8px;font-size:13px}"+
+    ".v6x-ctl{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin:8px 0}"+
+    ".v6x-ctl label{display:inline-flex;align-items:center;gap:5px;white-space:normal;font-size:13px;color:#1a1a1a;min-height:32px}"+
+    ".v6x-ctl select{font-family:inherit;font-size:13px;border:1.2px solid #1a1a1a;border-radius:4px;background:#fff;padding:5px;color:#1a1a1a;min-height:32px}"+
+    ".v6x-ctl input[type=range]{width:135px;max-width:35vw;accent-color:#1a1a1a}"+
+    ".v6x-ctl input[type=checkbox]{accent-color:#1a1a1a}"+
+    ".v6x-ctl .v6-btn{font:inherit;font-size:13px;min-height:36px;padding:6px 10px;border:1px solid #1a1a1a;border-radius:4px;background:#fff;color:#1a1a1a;cursor:pointer}"+
+    ".v6x-ctl .v6-btn:hover,.v6x-ctl .v6-btn.on{background:#1a1a1a;color:#fff}"+
+    ".v6x-ctl .v6-btn:active{transform:translateY(1px)}"+
+    ".v6x-ctl .v6-btn:disabled{opacity:.55;cursor:not-allowed}"+
+    ".v6x-cap{font-size:13px;color:#1a1a1a;margin-top:6px;line-height:1.6}"+
+    ".v6-widget{overflow:hidden}.v6-val{font-variant-numeric:tabular-nums}";
   document.head.appendChild(s);
 })();
 
@@ -35,12 +41,19 @@ function fmtg(x,d){ // general: trims trailing zeros
   if(!isFinite(x))return "—";var s=Number(x.toPrecision(d||3)).toString();return s;}
 function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
 function canvas(el,h){
-  var c=document.createElement("canvas");c.width=720*DPR;c.height=h*DPR;
+  var c=document.createElement("canvas");
+  c.width=720*DPR;c.height=h*DPR;
   c.style.width="100%";c.style.height="auto";c.style.maxWidth="100%";
-  el.appendChild(c);var ctx=c.getContext("2d");ctx.setTransform(DPR,0,0,DPR,0,0);
-  return {c:c,ctx:ctx,W:720,H:h,clear:function(){ctx.setTransform(DPR,0,0,DPR,0,0);ctx.clearRect(0,0,720,h);ctx.fillStyle="#fff";ctx.fillRect(0,0,720,h);}};
+  el.appendChild(c);
+  var ctx=c.getContext("2d");
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  return {c:c,ctx:ctx,W:720,H:h,clear:function(){
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    ctx.clearRect(0,0,720,h);
+    ctx.fillStyle="#fff";ctx.fillRect(0,0,720,h);
+  }};
 }
-function ctlBar(el){var d=div(el,"v6-controls v6x-ctl");return d;}
+function ctlBar(el){return div(el,"v6-controls v6x-ctl");}
 function slider(bar,label,p,cb,f){ // p=[min,max,init,step]
   var lab=document.createElement("label");lab.appendChild(document.createTextNode(label+" "));
   var r=document.createElement("input");r.type="range";r.min=p[0];r.max=p[1];r.step=p[3]==null?0.01:p[3];if(p[3]==="any")r.step="any";r.value=p[2];
@@ -71,8 +84,15 @@ function rng(seed){var a=(seed>>>0)||1;return function(){a|=0;a=a+0x6D2B79F5|0;v
 function gauss(r){var u=r()||1e-12,v=r();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
 X.rng=rng;
 /* drawing */
-function txt(ctx,s,x,y,o){o=o||{};ctx.save();ctx.fillStyle=o.color||INK;ctx.font=(o.weight||"400")+" "+(o.size||12)+"px "+FONT;
-  ctx.textAlign=o.align||"left";ctx.textBaseline=o.base||"alphabetic";ctx.fillText(s,x,y);ctx.restore();}
+function txt(ctx,s,x,y,o){
+  o=o||{};ctx.save();
+  ctx.fillStyle=o.color||INK;
+  ctx.font=(o.weight||"400")+" "+Math.max(12,o.size||12)+"px "+FONT;
+  ctx.textAlign=o.align||"left";
+  ctx.textBaseline=o.base||"alphabetic";
+  ctx.fillText(String(s),x,y);
+  ctx.restore();
+}
 function niceTicks(lo,hi,n){
   var span=hi-lo;if(!(span>0))return [lo];var raw=span/(n||5),p=Math.pow(10,Math.floor(Math.log10(raw))),f=raw/p;
   var st=(f<1.5?1:f<3?2:f<7?5:10)*p,t=[],v=Math.ceil(lo/st-1e-9)*st;
@@ -81,24 +101,38 @@ function tickLabel(v){var a=Math.abs(v);if(a>=10000)return (v/1000)+"k";return N
 /* frame(ctx, box, xr, yr, opts{xl,yl,xt,yt,noGrid,xticks,yticks}) */
 function frame(ctx,b,xr,yr,o){
   o=o||{};ctx.save();
-  var px=function(x){return b.x+(x-xr[0])/(xr[1]-xr[0])*b.w;},py=function(y){return b.y+b.h-(y-yr[0])/(yr[1]-yr[0])*b.h;};
-  var xt=o.xticks||niceTicks(xr[0],xr[1],o.xt||6),yt=o.yticks||niceTicks(yr[0],yr[1],o.yt||5);
-  if(!o.noGrid){ctx.strokeStyle=GRID;ctx.lineWidth=1;ctx.beginPath();
+  var px=function(x){return b.x+(x-xr[0])/(xr[1]-xr[0])*b.w;};
+  var py=function(y){return b.y+b.h-(y-yr[0])/(yr[1]-yr[0])*b.h;};
+  var xt=o.xticks||niceTicks(xr[0],xr[1],o.xt||6);
+  var yt=o.yticks||niceTicks(yr[0],yr[1],o.yt||5);
+  if(!o.noGrid){
+    ctx.strokeStyle=GRID;ctx.lineWidth=1;ctx.beginPath();
     xt.forEach(function(t){var x=Math.round(px(t))+.5;ctx.moveTo(x,b.y);ctx.lineTo(x,b.y+b.h);});
-    yt.forEach(function(t){var y=Math.round(py(t))+.5;ctx.moveTo(b.x,y);ctx.lineTo(b.x+b.w,y);});ctx.stroke();}
+    yt.forEach(function(t){var y=Math.round(py(t))+.5;ctx.moveTo(b.x,y);ctx.lineTo(b.x+b.w,y);});
+    ctx.stroke();
+  }
   ctx.strokeStyle=INK;ctx.lineWidth=1.2;
-  if(xr[0]<0&&xr[1]>0){var zx=Math.round(px(0))+.5;ctx.beginPath();ctx.moveTo(zx,b.y);ctx.lineTo(zx,b.y+b.h);ctx.stroke();}
-  if(yr[0]<0&&yr[1]>0){var zy=Math.round(py(0))+.5;ctx.beginPath();ctx.moveTo(b.x,zy);ctx.lineTo(b.x+b.w,zy);ctx.stroke();}
-  ctx.lineWidth=1.4;ctx.strokeRect(b.x+.5,b.y+.5,b.w,b.h);
-  ctx.fillStyle="#333";ctx.font="11px "+FONT;ctx.textAlign="center";ctx.textBaseline="top";
+  if(xr[0]<0&&xr[1]>0){
+    var zx=Math.round(px(0))+.5;ctx.beginPath();
+    ctx.moveTo(zx,b.y);ctx.lineTo(zx,b.y+b.h);ctx.stroke();
+  }
+  if(yr[0]<0&&yr[1]>0){
+    var zy=Math.round(py(0))+.5;ctx.beginPath();
+    ctx.moveTo(b.x,zy);ctx.lineTo(b.x+b.w,zy);ctx.stroke();
+  }
+  ctx.strokeRect(b.x+.5,b.y+.5,b.w,b.h);
+  ctx.fillStyle=INK;ctx.font="12px "+FONT;
+  ctx.textAlign="center";ctx.textBaseline="top";
   xt.forEach(function(t){ctx.fillText((o.xf||tickLabel)(t),px(t),b.y+b.h+4);});
   ctx.textAlign="right";ctx.textBaseline="middle";
   yt.forEach(function(t){ctx.fillText((o.yf||tickLabel)(t),b.x-5,py(t));});
-  ctx.textBaseline="alphabetic";
-  if(o.xl){ctx.textAlign="right";ctx.fillStyle=INK;ctx.font="12px "+FONT;ctx.fillText(o.xl,b.x+b.w,b.y+b.h+28);}
-  if(o.yl){ctx.textAlign="left";ctx.fillStyle=INK;ctx.font="12px "+FONT;ctx.fillText(o.yl,b.x,b.y-6);}
+  if(o.xl){ctx.textAlign="right";ctx.textBaseline="alphabetic";ctx.fillText(o.xl,b.x+b.w,b.y+b.h+28);}
+  if(o.yl){ctx.textAlign="left";ctx.textBaseline="alphabetic";ctx.fillText(o.yl,b.x,b.y-6);}
   ctx.restore();
-  return {px:px,py:py,b:b,ix:function(p){return xr[0]+(p-b.x)/b.w*(xr[1]-xr[0]);},iy:function(p){return yr[0]+(b.y+b.h-p)/b.h*(yr[1]-yr[0]);},xr:xr,yr:yr};
+  return {px:px,py:py,b:b,
+    ix:function(p){return xr[0]+(p-b.x)/b.w*(xr[1]-xr[0]);},
+    iy:function(p){return yr[0]+(b.y+b.h-p)/b.h*(yr[1]-yr[0]);},
+    xr:xr,yr:yr};
 }
 function clipBox(ctx,b){ctx.save();ctx.beginPath();ctx.rect(b.x,b.y,b.w,b.h);ctx.clip();}
 function path(ctx,pts,o){ // pts=[[x,y]...] in pixel coords; NaN breaks
@@ -126,9 +160,13 @@ function marker(ctx,k,x,y,r,o){ // shapes: 0 circle,1 square,2 triangle,3 diamon
   else if(k===4){ctx.moveTo(x-r,y);ctx.lineTo(x+r,y);ctx.moveTo(x,y-r);ctx.lineTo(x,y+r);ctx.stroke();}
   else{ctx.moveTo(x-r,y-r);ctx.lineTo(x+r,y+r);ctx.moveTo(x-r,y+r);ctx.lineTo(x+r,y-r);ctx.stroke();}
   ctx.restore();}
-function legend(ctx,x,y,items){ // items [{label,color,dash,w}]
-  items.forEach(function(it,i){var yy=y+i*16;seg(ctx,x,yy-4,x+22,yy-4,{color:it.color,dash:it.dash,w:it.w||2});
-    txt(ctx,it.label,x+28,yy,{size:11.5,color:INK});});}
+function legend(ctx,x,y,items){
+  items.forEach(function(it,i){
+    var yy=y+i*19;
+    seg(ctx,x,yy-4,x+22,yy-4,{color:it.color,dash:it.dash,w:it.w||2});
+    txt(ctx,it.label,x+28,yy,{size:12,color:INK});
+  });
+}
 function arrow(ctx,x0,y0,x1,y1,o){o=o||{};seg(ctx,x0,y0,x1,y1,o);var a=Math.atan2(y1-y0,x1-x0),s=o.head||7;
   ctx.save();ctx.fillStyle=o.color||INK;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x1-s*Math.cos(a-.4),y1-s*Math.sin(a-.4));
   ctx.lineTo(x1-s*Math.cos(a+.4),y1-s*Math.sin(a+.4));ctx.closePath();ctx.fill();ctx.restore();}
@@ -205,20 +243,20 @@ mount("sir-model",function(el,cfg){
     var p=frame(ctx,BR,[0,N],[0,yM],{xl:"S",yl:"I",xt:5});
     clipBox(ctx,BR);
     seg(ctx,p.px(N),p.py(0),p.px(N-yM),p.py(yM),{color:G2,dash:[5,4]});
-    if(R0>1)seg(ctx,p.px(N/R0),BR.y,p.px(N/R0),BR.y+BR.h,{color:RED,dash:[5,4],w:1.3});
+    if(R0*S0/N>1)seg(ctx,p.px(N/R0),BR.y,p.px(N/R0),BR.y+BR.h,{color:RED,dash:[5,4],w:1.3});
     if(es)path(ctx,es.y.map(function(y){return [p.px(y[0]),p.py(y[1])];}),{color:G1,dash:[2,3],w:2});
     path(ctx,sim.y.map(function(y){return [p.px(y[0]),p.py(y[1])];}),{color:INK,w:2.4});
     ctx.restore();
-    if(R0>1)txt(ctx,"S=N/R₀",p.px(N/R0)+4,BR.y+12,{size:11,color:RED});
+    if(R0*S0/N>1)txt(ctx,"S=N/R₀",p.px(N/R0)+4,BR.y+12,{size:11,color:RED});
     dot(ctx,p.px(sim.y[0][0]),p.py(sim.y[0][1]),3.6,{color:INK});
     dot(ctx,p.px(pk.k?sim.y[pk.k][0]:S0),p.py(pk.I),4.5,{fill:false,stroke:RED,w:1.6});
     dot(ctx,p.px(cur[0]),p.py(cur[1]),4.2,{color:RED});
     txt(ctx,"S+I=N (R=0)",p.px(N)-4,p.py(0)-14,{size:10.5,color:G1,align:"right"});
     var Sinf=sirFinal(beta,gamma,N,S0,I0),Im=sirImax(beta,gamma,N,S0,I0);
-    ro.innerHTML="<b>R₀ = β/γ = "+fmt(R0,2)+"</b> &nbsp;"+(R0>1?"<span class='r'>R₀>1 : 유행이 커진다 (I가 증가하는 구간이 있다)</span>":"<span class='r'>R₀≤1 : I가 처음부터 줄어든다 (유행 없음)</span>")+
+    ro.innerHTML="<b>R₀ = β/γ = "+fmt(R0,2)+"</b> &nbsp;"+(R0*S0/N>1?"<span class='r'>R₀S₀/N = "+fmt(R0*S0/N,3)+" > 1 : I가 처음엔 증가한다 (유행)</span>":"<span class='r'>R₀S₀/N = "+fmt(R0*S0/N,3)+" ≤ 1 : I가 처음부터 줄어든다 (유행 없음)</span>")+
      " &nbsp;<span class='m'>(접촉 간격 1/β = "+fmt(1/beta,1)+"일, 회복 1/γ = "+fmt(1/gamma,1)+"일)</span><br>"+
      "I_max : 수치해 <b>"+fmt(pk.I,2)+"</b> (t="+fmt(pk.t,1)+"일) · 공식 I₀+S₀−(N/R₀)(1+ln(R₀S₀/N)) = <b>"+fmt(Im,2)+"</b> &nbsp;|&nbsp; "+
-     "최종 S<sub>∞</sub> : 수치 "+fmt(sim.y[sim.y.length-1][0],2)+" · final-size 방정식 "+fmt(Sinf,2)+" &nbsp;|&nbsp; 피크는 S가 N/R₀ = "+(R0>1?fmt(N/R0,2):"—")+" 일 때";
+     "최종 S<sub>∞</sub> : 수치 "+fmt(sim.y[sim.y.length-1][0],2)+" · final-size 방정식 "+fmt(Sinf,2)+" &nbsp;|&nbsp; 피크는 S가 N/R₀ = "+(R0*S0/N>1?fmt(N/R0,2):"— (피크가 t=0)")+" 일 때";
   }
   draw();
 });
@@ -294,49 +332,78 @@ mount("sir-final-size",function(el,cfg){
 /* 수치해법 비교: Euler vs RK3 (주제 4) */
 mount("ode-methods",function(el,cfg){
   var cv=canvas(el,cfg.h||370),ctx=cv.ctx,bar=ctlBar(el);
-  var prob=select(bar,"문제",[["decay","y′ = −y , y(0)=1"],["grow","y′ = y , y(0)=1"],["sir","SIR의 I(t) (N=40, β=1/3, γ=1/14)"]],cfg.problem||"decay",draw);
-  var sh=slider(bar,"Δt",cfg.h_||[0.05,2.2,0.5,0.05],draw,function(v){return fmt(v,2);});
-  var ro=readout(el);var BL={x:50,y:28,w:320,h:270},BR={x:432,y:28,w:270,h:270};
-  function spec(){var p=prob.get();
-    if(p==="decay")return {f:function(t,y){return [-y[0]];},y0:[1],T:5,ex:function(t){return Math.exp(-t);},idx:0,yr:[-1.2,1.4],name:"y(t)"};
-    if(p==="grow")return {f:function(t,y){return [y[0]];},y0:[1],T:2,ex:function(t){return Math.exp(t);},idx:0,yr:[0,8],name:"y(t)"};
-    var f=sirF(1/3,1/14,40);return {f:f,y0:[39,1,0],T:60,ex:null,idx:1,yr:[0,26],name:"I(t)"};}
+  var prob=select(bar,"문제",[
+    ["decay","y′ = −y, y(0)=1"],
+    ["grow","y′ = y, y(0)=1"],
+    ["sir","SIR의 I(t)"]
+  ],cfg.problem||"decay",draw);
+  var sh=slider(bar,"Δt",[.05,2.2,.5,.05],draw,function(v){return fmt(v,2);});
+  var ro=readout(el),BL={x:52,y:30,w:320,h:260},BR={x:450,y:30,w:245,h:260};
   var refCache={};
-  function exact(sp,p){ if(sp.ex)return sp.ex; if(!refCache[p]){var r=rk4(sp.f,sp.y0,0,sp.T,0.005);refCache[p]=r;}
-    var r2=refCache[p];return function(t){var k=Math.min(r2.y.length-1,Math.round(t/0.005));return r2.y[k][1];};}
-  function errAt(sp,ex,method,h){var r=method(sp.f,sp.y0,0,sp.T,h);var y=r.y[r.y.length-1][sp.idx];return Math.abs(y-ex(sp.T));}
+
+  function spec(){
+    var p=prob.get();
+    if(p==="decay")return {f:function(t,y){return [-y[0]];},y0:[1],T:5,ex:function(t){return Math.exp(-t);},idx:0,yr:[-1.2,1.4],name:"y(t)",lambda:-1};
+    if(p==="grow")return {f:function(t,y){return [y[0]];},y0:[1],T:2,ex:function(t){return Math.exp(t);},idx:0,yr:[0,8],name:"y(t)",lambda:1};
+    var f=sirF(1/3,1/14,40);
+    return {f:f,y0:[39,1,0],T:60,ex:null,idx:1,yr:[0,26],name:"I(t)",lambda:null};
+  }
+  function exact(sp,p){
+    if(sp.ex)return sp.ex;
+    if(!refCache[p])refCache[p]=rk4(sp.f,sp.y0,0,sp.T,.005);
+    var r=refCache[p];
+    return function(t){var k=Math.min(r.y.length-1,Math.round(t/.005));return r.y[k][1];};
+  }
+  function errAt(sp,ex,method,h){
+    var r=method(sp.f,sp.y0,0,sp.T,h);
+    return Math.abs(r.y[r.y.length-1][sp.idx]-ex(sp.T));
+  }
   function draw(){
-    var p=prob.get(),sp=spec(),ex=exact(sp,p),h=sh.get();
-    var n=Math.max(1,Math.round(sp.T/h)),hh=sp.T/n;
-    var eu=euler(sp.f,sp.y0,0,sp.T,hh),r3=rk3(sp.f,sp.y0,0,sp.T,hh);
-    cv.clear();var m=frame(ctx,BL,[0,sp.T],sp.yr,{xl:"t",yl:sp.name});
+    var p=prob.get(),sp=spec(),ex=exact(sp,p),n=Math.max(1,Math.round(sp.T/sh.get())),h=sp.T/n;
+    var eu=euler(sp.f,sp.y0,0,sp.T,h),r3=rk3(sp.f,sp.y0,0,sp.T,h);
+    cv.clear();
+    var m=frame(ctx,BL,[0,sp.T],sp.yr,{xl:"t",yl:sp.name});
     clipBox(ctx,BL);
     curve(ctx,m,ex,0,sp.T,{color:INK,w:2.2,n:400});
     path(ctx,eu.t.map(function(t,i){return [m.px(t),m.py(eu.y[i][sp.idx])];}),{color:RED,w:1.6,dash:[4,3]});
-    path(ctx,r3.t.map(function(t,i){return [m.px(t),m.py(r3.y[i][sp.idx])];}),{color:G1,w:1.4});
+    path(ctx,r3.t.map(function(t,i){return [m.px(t),m.py(r3.y[i][sp.idx])];}),{color:INK,w:1.5});
     ctx.restore();
-    eu.t.forEach(function(t,i){dot(ctx,m.px(t),m.py(eu.y[i][sp.idx]),3,{color:RED});});
-    r3.t.forEach(function(t,i){var q=m.py(r3.y[i][sp.idx]);if(q>BL.y&&q<BL.y+BL.h)marker(ctx,1,m.px(t),q,2.6,{color:G1});});
-    legend(ctx,BL.x+BL.w-150,BL.y+16,[{label:"정확한 해",color:INK},{label:"Euler (●)",color:RED,dash:[4,3]},{label:"RK3 (■)",color:G1}]);
-    /* error vs dt (log-log) */
-    var hs=[],eE=[],eR=[];for(var k=0;k<=12;k++){var hv=0.5*Math.pow(2,-k/2);hs.push(hv);eE.push(errAt(sp,ex,euler,hv));eR.push(errAt(sp,ex,rk3,hv));}
-    var lo=-6,hi=0.4,all=eE.concat(eR).filter(function(v){return v>0;}).map(Math.log10),ylo=Math.max(-13,Math.floor(Math.min.apply(null,all))-1),yhi=Math.ceil(Math.max.apply(null,all))+0.5;
-    var xr=[Math.log10(hs[hs.length-1])-0.1,Math.log10(hs[0])+0.1];
-    var m2=frame(ctx,BR,xr,[ylo,yhi],{xl:"log₁₀ Δt",yl:"log₁₀ |전역 오차 (t=T)|",xt:4,yt:5});
+    legend(ctx,BL.x+BL.w-135,BL.y+16,[
+      {label:"참고 해",color:INK},
+      {label:"Euler",color:RED,dash:[4,3]},
+      {label:"RK3",color:INK}
+    ]);
+    var hs=[],eE=[],eR=[];
+    for(var k=0;k<=12;k++){
+      var hv=.5*Math.pow(2,-k/2);hs.push(hv);
+      eE.push(errAt(sp,ex,euler,hv));eR.push(errAt(sp,ex,rk3,hv));
+    }
+    var all=eE.concat(eR).filter(function(v){return v>0&&isFinite(v);}).map(Math.log10);
+    var ylo=Math.max(-14,Math.floor(Math.min.apply(null,all))-1);
+    var yhi=Math.ceil(Math.max.apply(null,all))+1;
+    var xr=[Math.log10(hs[hs.length-1])-.1,Math.log10(hs[0])+.1];
+    var m2=frame(ctx,BR,xr,[ylo,yhi],{xl:"log₁₀ h",yl:"log₁₀ error",xt:4,yt:4});
     clipBox(ctx,BR);
-    path(ctx,hs.map(function(v,i){return [m2.px(Math.log10(v)),m2.py(Math.log10(eE[i]))];}),{color:RED,w:2});
-    path(ctx,hs.map(function(v,i){return [m2.px(Math.log10(v)),m2.py(Math.log10(Math.max(eR[i],1e-14)))];}),{color:G1,w:2});
+    path(ctx,hs.map(function(v,i){return [m2.px(Math.log10(v)),m2.py(Math.log10(Math.max(eE[i],1e-14)))];}),{color:RED,w:2});
+    path(ctx,hs.map(function(v,i){return [m2.px(Math.log10(v)),m2.py(Math.log10(Math.max(eR[i],1e-14)))];}),{color:INK,w:2});
     ctx.restore();
-    function sl(a,b){var u=Math.log10(a),v=Math.log10(b);return (Math.log10(Math.max(b,1e-14))-Math.log10(a))/1;}
-    var i0=2,i1=8,sE=(Math.log10(eE[i1])-Math.log10(eE[i0]))/(Math.log10(hs[i1])-Math.log10(hs[i0]));
-    var sR=(Math.log10(Math.max(eR[i1],1e-14))-Math.log10(Math.max(eR[i0],1e-14)))/(Math.log10(hs[i1])-Math.log10(hs[i0]));
-    var cx=Math.log10(h);if(cx>=xr[0]&&cx<=xr[1])seg(ctx,m2.px(cx),BR.y,m2.px(cx),BR.y+BR.h,{color:RED,dash:[3,3]});
-    txt(ctx,"기울기 ≈ "+fmt(sE,2)+" (Euler, 1차)",BR.x+8,BR.y+BR.h-26,{size:11,color:RED});
-    txt(ctx,"기울기 ≈ "+fmt(sR,2)+" (RK3, 3차)",BR.x+8,BR.y+BR.h-10,{size:11,color:G1});
-    var eEh=errAt(sp,ex,euler,hh),eRh=errAt(sp,ex,rk3,hh);
-    var warn="";if(p==="decay"&&hh>2-1e-9)warn=" <span class='r'>Δt≥2 : |1−Δt|≥1 이라 Euler가 발산한다</span>";else if(p==="decay"&&hh>1)warn=" <span class='r'>Δt&gt;1 : Euler 값이 부호를 바꾸며 진동 (곱해지는 인자 1−Δt &lt; 0)</span>";
-    ro.innerHTML="Δt = <b>"+fmt(hh,3)+"</b> ("+n+" 스텝) &nbsp;|&nbsp; t=T 에서 오차 : Euler <b>"+eEh.toExponential(2)+"</b> · RK3 <b>"+eRh.toExponential(2)+"</b>"+warn+"<br>"+
-     "RK3 : y⁽¹⁾=yₙ+Δt f(yₙ), y⁽²⁾=¾yₙ+¼(y⁽¹⁾+Δt f(y⁽¹⁾)), yₙ₊₁=⅓yₙ+⅔(y⁽²⁾+Δt f(y⁽²⁾)) (f를 스텝당 3번). Δt를 절반으로 하면 Euler 오차는 ≈½, RK3 오차는 ≈⅛.";
+    var ee=errAt(sp,ex,euler,h),er=errAt(sp,ex,rk3,h),warn="";
+    if(sp.lambda===-1){
+      var z=1-h;
+      warn="Euler 증폭인자 q=1−h="+fmt(z,3)+", |q|="+fmt(Math.abs(z),3)+". ";
+      if(h<1)warn+="0<q<1: 비진동 감쇠.";
+      else if(Math.abs(z)<1)warn+="−1<q<0: 진동하면서 감쇠.";
+      else if(Math.abs(z)===1)warn+="|q|=1: 중립 경계, 오차가 감쇠하지 않음.";
+      else warn+="|q|>1: 작은 교란이 증폭됨.";
+    }else if(sp.lambda===1){
+      warn="Euler 증폭인자 q=1+h>1: 이 성장 문제에서는 수치해도 성장함.";
+    }else{
+      warn="SIR은 비선형 시스템이므로 단일 λ의 증폭인자만으로 전체 안정성을 판정할 수 없음.";
+    }
+    ro.innerHTML="Δt="+fmt(h,3)+" ("+n+" steps) · t=T 오차: Euler <b>"+ee.toExponential(2)+
+      "</b>, RK3 <b>"+er.toExponential(2)+"</b><br>"+warn+
+      "<br>RK3는 스텝당 3회 함수 평가를 사용하는 3차 SSP Runge–Kutta 방법이다. 매끄러운 문제의 충분히 작은 스텝에서는 전역 오차가 대략 O(h³), Euler는 O(h)다."+
+      "<br><span class='m'>오차 기울기는 유한한 h 범위에서 측정한 값이다. 큰 스텝, 부동소수점 한계, SIR의 비선형성 때문에 이론 차수와 정확히 일치하지 않을 수 있다.</span>";
   }
   draw();
 });
@@ -380,40 +447,80 @@ var FNS={relu:{n:"ReLU  max(0,u)",f:function(u){return Math.max(0,u);},dom:"ℝ"
   log:{n:"ln u",f:function(u){return u<=0?NaN:Math.log(u);},dom:"u > 0"}};
 mount("compose",function(el,cfg){
   var cv=canvas(el,cfg.h||330),ctx=cv.ctx,bar=ctlBar(el),bar2=ctlBar(el);
-  var gsel=select(bar,"안쪽 g(x)",[["lin","a·x + b"],["sq","x²"],["sin","sin x"],["abs","|x|"]],cfg.g||"lin",draw);
-  var fsel=select(bar,"바깥쪽 f(u)",Object.keys(FNS).map(function(k){return [k,FNS[k].n];}),cfg.f||"relu",draw);
-  var sa=slider(bar2,"a",[-3,3,1.5,0.1],draw,function(v){return fmt(v,1);});
-  var sb=slider(bar2,"b",[-3,3,-1,0.1],draw,function(v){return fmt(v,1);});
-  var sx=slider(bar2,"입력 x",[-3,3,0.8,0.05],draw,function(v){return fmt(v,2);});
+  var gsel=select(bar,"안쪽 g(x)",[
+    ["lin","ax+b"],["sq","x²−1"],["sin","sin 2x"],["abs","|x|−1"]
+  ],cfg.g||"lin",draw);
+  var fsel=select(bar,"바깥 f(u)",Object.keys(FNS).map(function(k){return [k,FNS[k].n];}),cfg.f||"relu",draw);
+  var sa=slider(bar2,"a",[-3,3,1.5,.1],draw,function(v){return fmt(v,1);});
+  var sb=slider(bar2,"b",[-3,3,-1,.1],draw,function(v){return fmt(v,1);});
+  var sx=slider(bar2,"입력 x",[-3,3,.8,.05],draw,function(v){return fmt(v,2);});
   var ro=readout(el);
-  var P=[{x:46,y:44,w:186,h:200},{x:276,y:44,w:186,h:200},{x:506,y:44,w:186,h:200}],R=[-3,3];
-  function G(x){var t=gsel.get();return t==="lin"?sa.get()*x+sb.get():t==="sq"?x*x-1:t==="sin"?Math.sin(2*x):Math.abs(x)-1;}
-  function gname(){var t=gsel.get();return t==="lin"?"g(x)="+fmt(sa.get(),1)+"x"+(sb.get()<0?"−":"+")+fmt(Math.abs(sb.get()),1):t==="sq"?"g(x)=x²−1":t==="sin"?"g(x)=sin 2x":"g(x)=|x|−1";}
+  var P=[{x:45,y:46,w:185,h:190},{x:277,y:46,w:185,h:190},{x:510,y:46,w:185,h:190}],R=[-3,3];
+
+  function G(x){
+    var t=gsel.get();
+    return t==="lin"?sa.get()*x+sb.get():t==="sq"?x*x-1:t==="sin"?Math.sin(2*x):Math.abs(x)-1;
+  }
   function F(u){return FNS[fsel.get()].f(u);}
-  function d(fn,x){var h=1e-5;return (fn(x+h)-fn(x-h))/(2*h);}
+  function gprime(x){
+    var t=gsel.get();
+    return t==="lin"?sa.get():t==="sq"?2*x:t==="sin"?2*Math.cos(2*x):Math.abs(x)<1e-8?NaN:(x>0?1:-1);
+  }
+  function fprime(u){
+    var t=fsel.get();
+    if(t==="relu")return u>1e-8?1:u< -1e-8?0:NaN;
+    if(typeof FNS[t].df==="function")return FNS[t].df(u);
+    var h=1e-5;
+    return (F(u+h)-F(u-h))/(2*h);
+  }
+  function diff(fn,x){
+    var h=1e-5,a=fn(x-h),b=fn(x+h);
+    return isFinite(a)&&isFinite(b)?(b-a)/(2*h):NaN;
+  }
   function draw(){
-    var x=sx.get(),u=G(x),y=F(u),gf=G(F(x));cv.clear();
-    var m1=frame(ctx,P[0],R,R,{xl:"x",xt:4,yt:4}),m2=frame(ctx,P[1],R,R,{xl:"u",xt:4,yt:4}),m3=frame(ctx,P[2],R,R,{xl:"x",xt:4,yt:4});
-    txt(ctx,"① g : x → u",P[0].x,P[0].y-18,{size:12,weight:700});txt(ctx,"② f : u → y",P[1].x,P[1].y-18,{size:12,weight:700});txt(ctx,"③ f∘g : x → y = f(g(x))",P[2].x,P[2].y-18,{size:12,weight:700});
+    var x=sx.get(),u=G(x),y=F(u),gf=G(F(x));
+    cv.clear();
+    var m1=frame(ctx,P[0],R,R,{xl:"x",xt:4,yt:4});
+    var m2=frame(ctx,P[1],R,R,{xl:"u",xt:4,yt:4});
+    var m3=frame(ctx,P[2],R,R,{xl:"x",xt:4,yt:4});
+    txt(ctx,"① g(x)",P[0].x,P[0].y-18,{size:12,weight:700});
+    txt(ctx,"② f(u)",P[1].x,P[1].y-18,{size:12,weight:700});
+    txt(ctx,"③ f(g(x))",P[2].x,P[2].y-18,{size:12,weight:700});
     clipBox(ctx,P[0]);curve(ctx,m1,G,-3,3,{color:INK,w:2.2});ctx.restore();
     clipBox(ctx,P[1]);curve(ctx,m2,F,-3,3,{color:INK,w:2.2});ctx.restore();
-    clipBox(ctx,P[2]);curve(ctx,m3,function(t){return F(G(t));},-3,3,{color:RED,w:2.6});
-    curve(ctx,m3,function(t){return G(F(t));},-3,3,{color:G2,w:1.8,dash:[5,4]});ctx.restore();
-    txt(ctx,"점선: g∘f",P[2].x+P[2].w-4,P[2].y+P[2].h-6,{size:11,color:G1,align:"right"});
-    // tracers
-    var ux=clamp(u,-3,3);
-    seg(ctx,m1.px(x),m1.py(0),m1.px(x),m1.py(ux),{color:RED,dash:[3,3]});seg(ctx,m1.px(x),m1.py(ux),P[0].x+P[0].w,m1.py(ux),{color:RED,dash:[3,3]});
-    dot(ctx,m1.px(x),m1.py(ux),4.5,{color:RED});
-    arrow(ctx,P[0].x+P[0].w+2,m1.py(ux),P[1].x-18,m1.py(ux)<P[1].y?P[1].y+2:Math.min(m1.py(ux),P[1].y+P[1].h),{color:G1,w:1,head:5});
-    if(isFinite(y)){seg(ctx,m2.px(ux),m2.py(0),m2.px(ux),m2.py(clamp(y,-3,3)),{color:RED,dash:[3,3]});dot(ctx,m2.px(ux),m2.py(clamp(y,-3,3)),4.5,{color:RED});
-      dot(ctx,m3.px(x),m3.py(clamp(y,-3,3)),4.5,{color:RED});seg(ctx,m3.px(x),m3.py(0),m3.px(x),m3.py(clamp(y,-3,3)),{color:RED,dash:[3,3]});}
-    else {seg(ctx,m2.px(ux),P[1].y,m2.px(ux),P[1].y+P[1].h,{color:RED,dash:[2,3]});txt(ctx,"f 정의역 밖",m2.px(ux),P[1].y+14,{size:11,color:RED,align:ux>0?"right":"left"});}
-    txt(ctx,gname(),P[0].x+4,P[0].y+P[0].h+42,{size:11.5,color:G1});
-    var fp=d(F,u),gp=d(G,x),cp=d(function(t){return F(G(t));},x);
+    clipBox(ctx,P[2]);
+    curve(ctx,m3,function(t){return F(G(t));},-3,3,{color:RED,w:2.4});
+    curve(ctx,m3,function(t){return G(F(t));},-3,3,{color:INK,w:1.5,dash:[5,4]});
+    ctx.restore();
+    txt(ctx,"점선: g(f(x))",P[2].x+P[2].w,P[2].y+P[2].h+17,{size:12,align:"right"});
+
+    if(isFinite(u)&&u>=R[0]&&u<=R[1]){
+      dot(ctx,m1.px(x),m1.py(u),4,{color:RED});
+      if(isFinite(y)&&y>=R[0]&&y<=R[1]){
+        dot(ctx,m2.px(u),m2.py(y),4,{color:RED});
+        dot(ctx,m3.px(x),m3.py(y),4,{color:RED});
+      }
+    }
+
+    var gp=gprime(x),fp=fprime(u),chain=fp*gp;
+    var comp=function(t){return F(G(t));};
+    var numeric=diff(comp,x);
+    var kink=(gsel.get()==="abs"&&Math.abs(x)<1e-8)||
+      (fsel.get()==="relu"&&Math.abs(u)<1e-8);
+    var defined=isFinite(u)&&isFinite(y);
+    var differentiable=defined&&!kink&&isFinite(chain);
+    var match=differentiable&&isFinite(numeric)&&Math.abs(chain-numeric)<1e-3*(1+Math.abs(chain));
     var dom=FNS[fsel.get()].dom;
-    ro.innerHTML="x = <b>"+fmt(x,2)+"</b> → u = g(x) = <b>"+fmt(u,3)+"</b> → y = f(u) = <b>"+(isFinite(y)?fmt(y,3):"정의되지 않음")+"</b> &nbsp;|&nbsp; 반대 순서 g(f(x)) = "+(isFinite(gf)?fmt(gf,3):"—")+(isFinite(gf)&&isFinite(y)&&Math.abs(gf-y)>1e-6?" <span class='r'>≠ f(g(x)) : 합성은 순서가 중요</span>":"")+"<br>"+
-      (isFinite(y)?"연쇄법칙 (f∘g)′(x) = f′(g(x))·g′(x) = "+fmt(fp,3)+" × "+fmt(gp,3)+" = <b>"+fmt(fp*gp,3)+"</b> (수치 미분 "+fmt(cp,3)+")":"")+
-      "<br><span class='m'>f∘g가 정의되려면 g의 치역이 f의 정의역("+dom+") 안에 들어가야 한다. ReLU는 u=0에서 미분 불가(꺾임), 그 외엔 위 식이 성립.</span>";
+    var inRange=isFinite(u)&&Math.abs(u)<=3;
+    ro.innerHTML="x="+fmt(x,3)+" → g(x)="+fmt(u,5)+" → f(g(x))="+(isFinite(y)?fmt(y,5):"정의되지 않음")+
+      "<br>g(f(x))="+(isFinite(gf)?fmt(gf,5):"정의되지 않음")+
+      (isFinite(y)&&isFinite(gf)&&Math.abs(y-gf)>1e-6?" · <span class='r'>합성 순서가 다름</span>":"")+
+      "<br>"+(differentiable?
+        "연쇄법칙: f′(g(x))g′(x)="+fmt(chain,6)+" · 수치 미분="+fmt(numeric,6)+
+          (match?" (일치)":" (차이 확인 필요)"):
+        "<span class='r'>현재 점에서는 연쇄법칙의 미분 판정을 확정할 수 없음: 정의역 또는 미분 가능성 확인 필요.</span>")+
+      (!inRange?"<br><span class='r'>u가 표시 범위 [−3,3] 밖이므로 해당 입력점은 그림에서 생략됨.</span>":"")+
+      "<br><span class='m'>합성 f∘g가 정의되려면 g(x)가 f의 정의역에 속해야 한다. 연쇄법칙은 g가 x에서, f가 g(x)에서 미분 가능할 때 적용한다. 유한 차분은 수치 검산이며 증명은 아니다.</span>";
   }
   draw();
 });
@@ -431,7 +538,7 @@ mount("nn-layers",function(el,cfg){
   function draw(){
     var s=sg(),v={};Object.keys(S).forEach(function(k){v[k]=S[k].get();});
     var n1=function(x){return s(v.w1*x+v.b1);},n2=function(x){return s(v.w2*x+v.b2);},y=function(x){return v.a1*n1(x)+v.a2*n2(x)+v.B;};
-    cv.clear();var yr=act.get()==="sig"?[-4,4]:[-6,6],m=frame(ctx,B,[-3,3],yr,{xl:"x",yl:"y",xt:6,yt:6});
+    cv.clear();var ym0=0;for(var q=0;q<=120;q++){var xq=-3+6*q/120;ym0=Math.max(ym0,Math.abs(y(xq)),Math.abs(n1(xq)),Math.abs(n2(xq)));}var yb=Math.max(act.get()==="sig"?4:6,Math.ceil(ym0*1.1)),yr=[-yb,yb],m=frame(ctx,B,[-3,3],yr,{xl:"x",yl:"y",xt:6,yt:6});
     clipBox(ctx,B);
     curve(ctx,m,n1,-3,3,{color:G1,w:1.6,dash:[6,4]});curve(ctx,m,n2,-3,3,{color:G1,w:1.6,dash:[2,3]});
     curve(ctx,m,y,-3,3,{color:RED,w:2.8,n:400});ctx.restore();
@@ -447,39 +554,104 @@ mount("nn-layers",function(el,cfg){
 /* UAT 증명 아이디어와 근사 오차 (주제 6) */
 mount("uat",function(el,cfg){
   var cv=canvas(el,cfg.h||360),ctx=cv.ctx,bar=ctlBar(el),bar2=ctlBar(el);
-  var TG={sin:{n:"sin 2πx",f:function(x){return Math.sin(2*Math.PI*x);},r:[-1.3,1.3]},
-          abs:{n:"|x−½|  (꺾인 점)",f:function(x){return Math.abs(x-0.5);},r:[-0.1,0.6]},
-          bump:{n:"e^{−40(x−½)²}",f:function(x){return Math.exp(-40*(x-0.5)*(x-0.5));},r:[-0.15,1.2]},
-          wig:{n:"x·sin 8x",f:function(x){return x*Math.sin(8*x);},r:[-1,1]}};
+  var TG={
+    sin:{n:"sin 2πx",f:function(x){return Math.sin(2*Math.PI*x);},r:[-1.3,1.3]},
+    abs:{n:"|x−½|",f:function(x){return Math.abs(x-.5);},r:[-.1,.6]},
+    bump:{n:"exp(−40(x−½)²)",f:function(x){return Math.exp(-40*(x-.5)*(x-.5));},r:[-.15,1.2]},
+    wig:{n:"x sin 8x",f:function(x){return x*Math.sin(8*x);},r:[-1,1]}
+  };
   var tg=select(bar,"목표 f",Object.keys(TG).map(function(k){return [k,TG[k].n];}),cfg.target||"sin",draw);
-  var md=select(bar,"방식",[["sig","sigmoid : 두 계단의 차 = box"],["relu","ReLU : 꺾은선 (N개)"]],cfg.mode||"sig",draw);
-  var sN=slider(bar2,"N (box/조각 수)",[1,40,6,1],draw,function(v){return String(v);});
-  var sw=slider(bar2,"log₁₀ w (가파름)",[0.5,3,2,0.05],draw,function(v){return "w="+fmtg(Math.pow(10,v),3);});
-  var ro=readout(el),B={x:48,y:26,w:370,h:262},B2={x:470,y:26,w:226,h:262};
+  var md=select(bar,"방식",[
+    ["sig","Sigmoid 계단 차"],
+    ["relu","ReLU 꺾은선"]
+  ],cfg.mode||"sig",draw);
+  var sN=slider(bar2,"N",[1,40,6,1],draw,function(v){return String(v);});
+  var sw=slider(bar2,"log₁₀ w",[.5,3,2,.05],draw,function(v){return "w="+fmtg(Math.pow(10,v),3);});
+  var ro=readout(el),B={x:50,y:30,w:365,h:250},B2={x:470,y:30,w:225,h:250};
+  var EPS=1e-12;
+
   function approx(mode,f,N,w){
-    if(mode==="sig"){var c=[];for(var i=0;i<N;i++)c.push(f((i+0.5)/N));
-      return function(x){var s=0;for(var i=0;i<N;i++)s+=c[i]*(sigm(w*(x-i/N))-sigm(w*(x-(i+1)/N)));return s;};}
-    var kn=[];for(i=0;i<=N;i++)kn.push(f(i/N));
-    return function(x){var i=Math.min(N-1,Math.max(0,Math.floor(x*N))),x0=i/N;return kn[i]+(kn[i+1]-kn[i])*(x-x0)*N;};}
-  function sup(a,f){var mx=0;for(var i=0;i<=800;i++){var x=i/800,e=Math.abs(f(x)-a(x));if(e>mx)mx=e;}return mx;}
+    if(mode==="sig"){
+      var c=[];
+      for(var i=0;i<N;i++)c.push(f((i+.5)/N));
+      return function(x){
+        var s=0;
+        for(var j=0;j<N;j++){
+          s+=c[j]*(sigm(w*(x-j/N))-sigm(w*(x-(j+1)/N)));
+        }
+        return s;
+      };
+    }
+    var kn=[];
+    for(var i=0;i<=N;i++)kn.push(f(i/N));
+    return function(x){
+      var j=Math.min(N-1,Math.max(0,Math.floor(x*N)));
+      var x0=j/N;
+      return kn[j]+(kn[j+1]-kn[j])*(x-x0)*N;
+    };
+  }
+  function sup(a,f){
+    var mx=0;
+    for(var i=0;i<=800;i++){
+      var x=i/800,e=Math.abs(f(x)-a(x));
+      if(isFinite(e)&&e>mx)mx=e;
+    }
+    return mx;
+  }
   X.uatApprox=approx;
+
   function draw(){
-    var T=TG[tg.get()],mode=md.get(),N=sN.get(),w=Math.pow(10,sw.get());cv.clear();
+    var T=TG[tg.get()],mode=md.get(),N=sN.get(),w=Math.pow(10,sw.get());
     var a=approx(mode,T.f,N,w),err=sup(a,T.f);
-    var m=frame(ctx,B,[0,1],T.r,{xl:"x",yl:"y",xt:5,yt:5});clipBox(ctx,B);
-    if(mode==="sig"&&N<=10){for(var i=0;i<N;i++){var c=T.f((i+0.5)/N);curve(ctx,m,function(x){return c*(sigm(w*(x-i/N))-sigm(w*(x-(i+1)/N)));},0,1,{color:G3,w:1.2,n:300});} }
-    curve(ctx,m,T.f,0,1,{color:INK,w:2.2,n:400});curve(ctx,m,a,0,1,{color:RED,w:2.2,n:700});ctx.restore();
-    legend(ctx,B.x+B.w-150,B.y+16,[{label:"목표 f",color:INK},{label:"신경망 y(x)",color:RED}]);
-    // error vs N
-    var Ns=[],es=[];for(var k=1;k<=40;k++){Ns.push(k);es.push(sup(approx(mode,T.f,k,w),T.f));}
-    var lo=Math.log10(Math.max(1e-4,Math.min.apply(null,es)))-0.2,hi=Math.log10(Math.max.apply(null,es))+0.2;
-    var m2=frame(ctx,B2,[1,40],[lo,hi],{xl:"N",yl:"log₁₀ max|f−y|",xt:4,yt:5});clipBox(ctx,B2);
-    path(ctx,Ns.map(function(n,i){return [m2.px(n),m2.py(Math.log10(Math.max(es[i],1e-4)))];}),{color:INK,w:2});ctx.restore();
-    dot(ctx,m2.px(N),m2.py(Math.log10(Math.max(err,1e-4))),4.5,{color:RED});
-    ro.innerHTML="sup norm 오차 ‖f−y‖∞ = <b>"+fmt(err,4)+"</b> &nbsp;|&nbsp; "+(mode==="sig"?"neuron "+(2*N)+"개 (box 하나 = 계단 둘의 차)":"ReLU neuron "+N+"개")+"<br>"+
-      (mode==="sig"?"box의 높이 = 구간 가운데에서의 f 값 → <b>조각 상수 근사</b>. N이 커질수록(좁은 box) 오차가 줄고, w가 작으면 경계가 뭉개져 오차가 남는다 (w가 N에 비해 충분히 커야 한다). 끝점 x=0,1 에서는 σ=½ 라 값이 어긋난다.":
-        "ReLU 꺾은선은 각 꺾임 위치에서 기울기만 바꾼다 → 연속 함수를 이어 붙인 꺾은선으로 근사. 매끈한 f는 N이 2배면 오차가 약 ¼ (오른쪽 그림의 기울기). 꺾인 점이 있는 f도 근사된다 (UAT 가정은 연속뿐).")+
-      "<br><span class='m'>UAT는 이런 파라미터가 <b>존재</b>한다고만 말한다. 위는 존재를 보이는 구성이고, 실제 학습으로 찾는 방법은 아니다.</span>";
+    cv.clear();
+    var m=frame(ctx,B,[0,1],T.r,{xl:"x",yl:"y",xt:5,yt:5});
+    clipBox(ctx,B);
+    if(mode==="sig"&&N<=10){
+      for(var i=0;i<N;i++){
+        (function(j){
+          var c=T.f((j+.5)/N);
+          curve(ctx,m,function(x){
+            return c*(sigm(w*(x-j/N))-sigm(w*(x-(j+1)/N)));
+          },0,1,{color:GRID,w:1.2,n:250});
+        })(i);
+      }
+    }
+    curve(ctx,m,T.f,0,1,{color:INK,w:2.2,n:400});
+    curve(ctx,m,a,0,1,{color:RED,w:2.2,n:700});
+    ctx.restore();
+    legend(ctx,B.x+B.w-145,B.y+16,[
+      {label:"목표 f",color:INK},
+      {label:"근사 y(x)",color:RED}
+    ]);
+
+    var Ns=[],es=[];
+    for(var k=1;k<=40;k++){
+      Ns.push(k);es.push(sup(approx(mode,T.f,k,w),T.f));
+    }
+    // The floor is solely for log-plot rendering; the reported error is unchanged.
+    var plotFloor=1e-12;
+    var logs=es.map(function(e){return Math.log10(Math.max(e,plotFloor));});
+    var lo=Math.min(-12,Math.floor(Math.min.apply(null,logs))-1);
+    var hi=Math.ceil(Math.max.apply(null,logs))+1;
+    if(hi<=lo)hi=lo+1;
+    var m2=frame(ctx,B2,[1,40],[lo,hi],{xl:"N",yl:"log₁₀ sampled error",xt:4,yt:5});
+    clipBox(ctx,B2);
+    path(ctx,Ns.map(function(n,i){
+      return [m2.px(n),m2.py(logs[i])];
+    }),{color:INK,w:2});
+    ctx.restore();
+    dot(ctx,m2.px(N),m2.py(Math.log10(Math.max(err,plotFloor))),4.5,{color:RED});
+
+    var description=mode==="sig"?
+      "각 box의 높이는 구간 중앙의 f 값이다. sigmoid 두 개의 차로 매끄러운 계단 근사를 만들며, 유한한 w에서는 경계가 완전히 날카롭지 않다. 끝점의 출력도 별도로 확인해야 한다.":
+      "ReLU 근사는 격자점의 함수값을 직선으로 연결한다. 연속 함수의 균등연속성을 이용하면 격자를 세분할수록 선형 보간 오차가 감소하지만, 일반적으로 N을 2배로 했을 때 항상 정확히 1/4이 되는 것은 아니다.";
+
+    ro.innerHTML="801개 표본에서 측정한 최대 오차: <b>"+fmt(err,6)+"</b>"+
+      "<br>"+(mode==="sig"?"Sigmoid neuron "+(2*N)+"개":"ReLU 근사 조각 "+N+"개")+
+      " · w="+fmtg(w,4)+
+      "<br>"+description+
+      "<br><span class='m'>오른쪽 그래프는 같은 801개 표본에서 구한 근사 오차를 N에 따라 나타낸다. 로그 그래프에서는 0 오차를 그릴 수 없으므로 "+plotFloor+"를 시각화에만 사용한다. 수치 하한을 실제 오차로 해석하면 안 된다.</span>"+
+      "<br><span class='m'>UAT는 적절한 신경망 파라미터가 존재한다는 정리이지, 이 구성의 오차가 항상 단조 감소한다거나 학습 알고리즘이 그 파라미터를 찾는다는 보장은 아니다. 유한 표본의 최댓값 역시 연속 구간 전체의 sup norm을 증명하지 않는다.</span>";
   }
   draw();
 });
@@ -675,33 +847,61 @@ function attractor(r,x0,trans,maxp){ // returns {period (0 if none), orbit[], ly
 X.attractor=attractor;
 mount("logistic-cobweb",function(el,cfg){
   var cv=canvas(el,cfg.h||350),ctx=cv.ctx,bar=ctlBar(el),bar2=ctlBar(el);
-  var sr=slider(bar,"r",cfg.r||[0.5,4,3.2,0.01],draw,function(v){return fmt(v,2);});
-  var sx=slider(bar,"x₀",[0.01,0.99,0.2,0.01],draw,function(v){return fmt(v,2);});
+  var sr=slider(bar,"r",cfg.r||[.5,4,3.2,.01],draw,function(v){return fmt(v,2);});
+  var sx=slider(bar,"x₀",[.01,.99,.2,.01],draw,function(v){return fmt(v,2);});
   var sn=slider(bar2,"반복 횟수",[1,60,20,1],draw,function(v){return String(v);});
-  [["0.5",0.5],["1.5",1.5],["2.8",2.8],["3.2",3.2],["3.5",3.5],["3.8",3.8]].forEach(function(q){button(bar2,"r="+q[0],function(){sr.set(q[1]);draw();});});
-  var ro=readout(el),BL={x:44,y:24,w:270,h:270},BR={x:372,y:24,w:326,h:270};
+  [[.5,"0.5"],[1,"1"],[2.8,"2.8"],[3,"3"],[3.2,"3.2"],[3.5,"3.5"],[3.8,"3.8"]].forEach(function(q){
+    button(bar2,"r="+q[1],function(){sr.set(q[0]);draw();});
+  });
+  var ro=readout(el),BL={x:48,y:28,w:270,h:260},BR={x:390,y:28,w:300,h:260};
   function draw(){
-    var r=sr.get(),x0=sx.get(),n=sn.get(),f=lmap(r);cv.clear();
-    var m=frame(ctx,BL,[0,1],[0,1],{xl:"x",yl:"y",xt:5,yt:5});clipBox(ctx,BL);
-    curve(ctx,m,f,0,1,{color:INK,w:2.2});seg(ctx,m.px(0),m.py(0),m.px(1),m.py(1),{color:G1,w:1.4,dash:[5,4]});
-    var x=x0,pts=[[m.px(x),m.py(0)]],xs=[x];
-    for(var i=0;i<n;i++){var y=f(x);pts.push([m.px(x),m.py(y)]);pts.push([m.px(y),m.py(y)]);x=y;xs.push(x);}
+    var r=sr.get(),x0=sx.get(),n=sn.get(),f=lmap(r);
+    cv.clear();
+    var m=frame(ctx,BL,[0,1],[0,1],{xl:"x",yl:"y",xt:5,yt:5});
+    clipBox(ctx,BL);
+    curve(ctx,m,f,0,1,{color:INK,w:2.2});
+    seg(ctx,m.px(0),m.py(0),m.px(1),m.py(1),{color:INK,w:1.4,dash:[5,4]});
+    var x=x0,pts=[[m.px(x),m.py(0)]];
+    for(var i=0;i<n;i++){
+      var y=f(x);pts.push([m.px(x),m.py(y)],[m.px(y),m.py(y)]);x=y;
+    }
     path(ctx,pts,{color:RED,w:1.5});ctx.restore();
-    txt(ctx,"y=rx(1−x)",m.px(0.55),m.py(Math.min(0.98,r/4))-5,{size:11});txt(ctx,"y=x",m.px(0.9),m.py(0.9)+16,{size:11,color:G1});
-    var xf=r>1?1-1/r:0;dot(ctx,m.px(xf),m.py(xf),4.6,{fill:false,stroke:RED,w:1.8});dot(ctx,m.px(x0),m.py(0),3.6,{color:INK});
-    // time series
-    var ser=[],xx=x0;for(i=0;i<=60;i++){ser.push(xx);xx=f(xx);}
-    var m2=frame(ctx,BR,[0,60],[0,1],{xl:"n",yl:"xₙ",xt:6,yt:5});clipBox(ctx,BR);
-    path(ctx,ser.map(function(v,i){return [m2.px(i),m2.py(v)];}),{color:G2,w:1.2});ctx.restore();
-    ser.forEach(function(v,i){dot(ctx,m2.px(i),m2.py(v),i<=n?3.2:2.2,{color:i<=n?RED:G2});});
+    txt(ctx,"f(x)=rx(1−x)",m.px(.52),m.py(Math.min(.98,r/4)) - 5,{size:12});
+    txt(ctx,"y=x",m.px(.9),m.py(.9)+16,{size:12});
+    var xf=r>1?1-1/r:0;
+    dot(ctx,m.px(xf),m.py(xf),4.5,{fill:false,stroke:RED,w:1.8});
+    dot(ctx,m.px(x0),m.py(0),3.5,{color:INK});
+
+    var ser=[],xx=x0,ly=0,lyN=0;
+    for(i=0;i<=60;i++){
+      ser.push(xx);
+      if(i<60){
+        var der=Math.abs(r*(1-2*xx));
+        if(der>0&&isFinite(der))ly+=Math.log(der);
+        else lyN++;
+        xx=f(xx);
+      }
+    }
+    var m2=frame(ctx,BR,[0,60],[0,1],{xl:"n",yl:"xₙ",xt:6,yt:5});
+    clipBox(ctx,BR);
+    path(ctx,ser.map(function(v,i){return [m2.px(i),m2.py(v)];}),{color:INK,w:1.5});
+    ctx.restore();
+    ser.forEach(function(v,i){dot(ctx,m2.px(i),m2.py(v),i<=n?3.2:2,{color:i<=n?RED:INK});});
     if(r>1)seg(ctx,BR.x,m2.py(xf),BR.x+BR.w,m2.py(xf),{color:RED,dash:[4,4],w:1});
+
     var at=attractor(r,x0,2000,64),res;
-    if(r<=1)res="x<sub>n</sub> → 0 (고정점 0이 안정)";
-    else if(at.period===1)res="한 점으로 수렴 : x* = 1−1/r = "+fmt(xf,4)+(r<=2?" (단조)":" (위아래로 흔들리며)");
-    else if(at.period>1)res="<span class='r'>"+at.period+"주기</span> : "+at.orbit.map(function(v){return fmt(v,4);}).join(" ↔ ");
-    else res=at.lyap>0?"<span class='r'>카오스</span> (주기 없음, Lyapunov λ="+fmt(at.lyap,3)+">0)":"주기가 64보다 길거나 수렴이 매우 느림";
-    ro.innerHTML="r = <b>"+fmt(r,2)+"</b> : "+res+"<br>고정점 x=0, "+(r>1?"x*=1−1/r=<b>"+fmt(xf,4)+"</b> &nbsp;·&nbsp; f′(x*) = r(1−2x*) = 2−r = <b>"+fmt(2-r,3)+"</b> → |f′(x*)|"+(Math.abs(2-r)<1?" &lt; 1 : <b>안정</b> (끌려 들어옴)":" &gt; 1 : <b>불안정</b> (밀려남)"):"f′(0)=r="+fmt(r,2)+" &lt; 1 → 0이 안정")+
-      " &nbsp;|&nbsp; Lyapunov 지수 λ = 평균 ln|r(1−2xₙ)| = "+fmt(at.lyap,3)+(at.lyap>0?" (&gt;0 : 초기값에 민감)":" (&lt;0 : 안정)")+"<br><span class='m'>붉은 선=cobweb: 포물선까지 수직 → 대각선까지 수평을 반복. 붉은 빈 원=고정점(교점). r≤4 라야 [0,1]에 머문다.</span>";
+    if(r<1)res="x=0은 국소 안정: 0<r<1.";
+    else if(r===1)res="r=1: f′(0)=1인 비쌍곡적 경계. 0<x₀<1에서는 xₙ→0이지만 선형 수축률은 아니다.";
+    else if(r<3)res="비영 고정점 x*=1−1/r은 국소 안정 (1<r<3).";
+    else if(r===3)res="r=3: 비영 고정점의 경계 f′(x*)=−1. 국소 수렴은 느리며 선형 수축 판정만으로 결론을 내릴 수 없다.";
+    else if(r<1+Math.sqrt(6))res="비영 고정점은 불안정. 주기 궤도 또는 과도 거동은 시작점과 매개변수에 따라 달라진다.";
+    else res=at.period>1?"수치 탐색에서 "+at.period+"주기 후보가 관측됨.":"긴 과도 구간 뒤에도 유한 탐색만으로 궤도를 확정 분류할 수 없음.";
+
+    ro.innerHTML="r="+fmt(r,3)+" · x₀="+fmt(x0,4)+"<br>"+res+
+      "<br>고정점 x=0, "+(r>1?"x*=1−1/r="+fmt(xf,4)+" · f′(x*)="+fmt(2-r,4):"비영 고정점은 r>1에서 존재")+
+      "<br>유한 궤도에서의 평균 log |f′(xₙ)| = "+fmt(ly/60,4)+
+      (lyN?" (미분값 0인 단계 "+lyN+"회 포함)": "")+
+      "<br><span class='m'>평균 Lyapunov 추정치는 길이 60의 궤도에 대한 수치값이며, 그 부호만으로 모든 초기값의 점근 거동을 증명할 수 없다. 0<r≤4에서 [0,1]은 불변 구간이다.</span>";
   }
   draw();
 });
@@ -733,7 +933,7 @@ mount("bifurcation",function(el,cfg){
     sp.forEach(function(s,i){if(s[0]>a&&s[0]<b){seg(ctx,m.px(s[0]),B.y,m.px(s[0]),B.y+B.h,{color:G2,dash:[3,4],w:1});
       var rt=m.px(s[0])>B.x+B.w-170;txt(ctx,s[1],m.px(s[0])+(rt?-3:3),B.y+12+i*13,{size:10.5,color:G1,align:rt?"right":"left"});}});
     seg(ctx,m.px(r),B.y,m.px(r),B.y+B.h,{color:RED,w:1.6});
-    var at=attractor(r,0.3,3000,64);at.orbit.forEach(function(v){dot(ctx,m.px(r),m.py(v),3.2,{color:RED});});
+    var at=attractor(r,0.5,Math.max(tr.get(),400),64);at.orbit.forEach(function(v){dot(ctx,m.px(r),m.py(v),3.2,{color:RED});});
     ro.innerHTML="r = <b>"+fmt(r,3)+"</b> : "+(at.period>0?"<span class='r'>"+at.period+"주기</span> ("+at.orbit.slice(0,8).map(function(v){return fmt(v,4);}).join(", ")+(at.orbit.length>=8&&at.period>8?" …":"")+")":(at.lyap>0?"<span class='r'>카오스</span> (λ="+fmt(at.lyap,3)+")":"긴 주기/느린 수렴"))+
       " &nbsp;|&nbsp; Lyapunov λ = "+fmt(at.lyap,3)+"<br>각 r마다 x₀=0.5에서 시작해 앞쪽 "+tr.get()+"번을 버리고 그 뒤 130개를 찍은 것. 점 1개 → 2개 → 4개 …로 갈라지는 <b>period doubling</b>이 쌓여 카오스(띠)가 되고, 그 안에 주기 3 같은 창이 다시 나타난다. 붉은 점 = 선택한 r의 장기 거동.";
   }
@@ -743,43 +943,97 @@ mount("bifurcation",function(el,cfg){
 /* 고정점 반복과 Banach 수축 (주제 6) */
 mount("banach",function(el,cfg){
   var cv=canvas(el,cfg.h||350),ctx=cv.ctx,bar=ctlBar(el),bar2=ctlBar(el);
-  var G={lin:{n:"g(x) = a·x + 1",view:[-1,6],yv:[-1,6]},cos:{n:"g(x) = cos x",view:[0,1.2],yv:[0,1.2]},newton:{n:"g(x) = (x + 2/x)/2  (√2)",view:[0.5,2.5],yv:[0.5,2.5]}};
+  var G={
+    lin:{n:"g(x) = ax + 1",view:[-1,6]},
+    cos:{n:"g(x) = cos x",view:[0,1.2]},
+    newton:{n:"g(x) = (x + 2/x)/2",view:[.5,2.5]}
+  };
   var gs=select(bar,"함수",Object.keys(G).map(function(k){return [k,G[k].n];}),cfg.g||"lin",function(){setup();draw();});
-  var sa=slider(bar,"a (선형일 때)",[-1.6,1.6,0.6,0.05],draw,function(v){return fmt(v,2);});
-  var sx=slider(bar2,"x₀",[0,1,0.5,0.01],draw,function(v){return fmt(v,2);});
+  var sa=slider(bar,"a",[-1.6,1.6,.6,.05],draw,function(v){return fmt(v,2);});
+  var sx=slider(bar2,"x₀",[0,1,.5,.01],draw,function(v){return fmt(v,2);});
   var sn=slider(bar2,"반복 n",[1,25,6,1],draw,function(v){return String(v);});
-  var ro=readout(el),BL={x:44,y:24,w:290,h:270},BR={x:396,y:24,w:302,h:270};
-  function gfun(){var k=gs.get(),a=sa.get();return k==="lin"?function(x){return a*x+1;}:k==="cos"?Math.cos:function(x){return (x+2/x)/2;};}
-  function info(){var k=gs.get(),a=sa.get();
-    if(k==="lin")return {xs:Math.abs(a-1)<1e-9?NaN:1/(1-a),L:Math.abs(a),dom:[-1e9,1e9]};
-    if(k==="cos"){var x=1;for(var i=0;i<400;i++)x=Math.cos(x);return {xs:x,L:Math.sin(1),dom:[0,1]};}
-    return {xs:Math.SQRT2,L:0.5,dom:[1,2]};}
-  function setup(){var v=G[gs.get()].view;sx.el.min=v[0];sx.el.max=v[1];sx.el.step=0.01;var d={lin:0.5,cos:0.2,newton:1.9}[gs.get()];sx.set(d);}
+  var ro=readout(el),BL={x:50,y:30,w:290,h:260},BR={x:410,y:30,w:285,h:260};
+
+  function gfun(){
+    var k=gs.get(),a=sa.get();
+    return k==="lin"?function(x){return a*x+1;}:
+      k==="cos"?function(x){return Math.cos(x);}:function(x){return (x+2/x)/2;};
+  }
+  function info(){
+    var k=gs.get(),a=sa.get();
+    if(k==="lin")return {I:[-1,6],L:Math.abs(a),fp:Math.abs(a-1)>1e-12?1/(1-a):NaN};
+    if(k==="cos")return {I:[0,1],L:Math.sin(1),fp:0.7390851332151607};
+    return {I:[1,2],L:.5,fp:Math.SQRT2};
+  }
+  function setup(){
+    var I=G[gs.get()].view;
+    sx.el.min=I[0];sx.el.max=I[1];sx.el.step=.01;
+    sx.set({lin:.5,cos:.2,newton:1.9}[gs.get()]);
+  }
   function draw(){
-    var k=gs.get(),g=gfun(),inf=info(),v=G[k].view,yv=G[k].yv,x0=sx.get(),n=sn.get();cv.clear();
-    var m=frame(ctx,BL,v,yv,{xl:"x",yl:"y",xt:5,yt:5});clipBox(ctx,BL);
-    curve(ctx,m,g,v[0],v[1],{color:INK,w:2.2});seg(ctx,m.px(v[0]),m.py(v[0]),m.px(v[1]),m.py(v[1]),{color:G1,dash:[5,4],w:1.4});
-    var x=x0,pts=[[m.px(x),m.py(x)]],xs=[x0];
-    for(var i=0;i<n;i++){var y=g(x);pts.push([m.px(x),m.py(y)]);pts.push([m.px(y),m.py(y)]);x=y;xs.push(x);}
-    path(ctx,pts,{color:RED,w:1.5});ctx.restore();
-    if(isFinite(inf.xs))dot(ctx,m.px(inf.xs),m.py(inf.xs),4.6,{fill:false,stroke:RED,w:1.8});
-    dot(ctx,m.px(x0),m.py(x0),3.6,{color:INK});
-    // errors
-    var N=25,ser=[],xx=x0;for(i=0;i<=N;i++){ser.push(Math.abs(xx-inf.xs));xx=g(xx);}
-    var contr=inf.L<1&&x0>=inf.dom[0]&&x0<=inf.dom[1];
-    var bound=null;if(contr){bound=[];var d01=Math.abs(g(x0)-x0);for(i=0;i<=N;i++)bound.push(Math.pow(inf.L,i)*d01/(1-inf.L));}
-    var lg=function(e){return Math.log10(Math.max(e,1e-16));},all=ser.map(lg);
-    var ylo=-16,yhi=Math.min(8,Math.max(0.5,Math.ceil(Math.max.apply(null,all))+0.3));
-    var m2=frame(ctx,BR,[0,N],[ylo,yhi],{xl:"n",yl:"log₁₀ |xₙ − x*|",xt:5,yt:5});clipBox(ctx,BR);
-    if(bound)path(ctx,bound.map(function(e,i){return [m2.px(i),m2.py(lg(e))];}),{color:G1,w:1.6,dash:[6,4]});
-    path(ctx,ser.map(function(e,i){return [m2.px(i),m2.py(lg(e))];}),{color:RED,w:2});ctx.restore();
-    ser.forEach(function(e,i){dot(ctx,m2.px(i),m2.py(lg(e)),i<=n?3.2:2,{color:i<=n?RED:G2});});
-    var st;
-    if(k==="lin"){var a=sa.get();st=Math.abs(a)<1?"|a|="+fmt(Math.abs(a),2)+" &lt; 1 : <b>수축</b> (L=|a|). 오차가 매 스텝 |a|배 → 직선(로그축)":"|a|="+fmt(Math.abs(a),2)+" ≥ 1 : 수축 아님 → <span class='r'>반복이 x*로 안 간다</span>"+(a<0?" (a&lt;0 : 부호를 바꾸며 진동)":"");}
-    else if(k==="cos")st="구간 [0,1]에서 L = max|g′| = sin 1 ≈ 0.841 &lt; 1, g([0,1])=[cos 1, 1] ⊂ [0,1] → Banach 조건 만족";
-    else st="구간 [1,2]에서 |g′(x)| = |½−1/x²| ≤ ½ = L, g([1,2]) = [1.414, 1.5] ⊂ [1,2]. 실제 수렴은 L=½보다 훨씬 빠르다 (오차가 제곱으로 준다).";
-    ro.innerHTML="x<sub>"+n+"</sub> = <b>"+fmt(xs[n],6)+"</b> , 고정점 x* = "+(isFinite(inf.xs)?fmt(inf.xs,6):"없음")+" , 오차 |x<sub>"+n+"</sub>−x*| = <b>"+(ser[n]).toExponential(2)+"</b><br>"+st+
-      (bound?"<br>점선 = 사전 오차 한계 Lⁿ/(1−L)·|x₁−x₀| (실제 오차는 항상 그 아래).":"")+"<br><span class='m'>붉은 선 = cobweb. 고정점 Thm: g가 구간을 자기 자신으로 보내고 L&lt;1 이면 고정점이 유일하고 반복이 그리로 수렴한다.</span>";
+    var k=gs.get(),g=gfun(),inf=info(),I=inf.I,x0=sx.get(),n=sn.get();
+    var selfMap=false,derivativeBound=inf.L;
+    if(k==="lin"){
+      var v=[g(I[0]),g(I[1])];
+      selfMap=Math.min(v[0],v[1])>=I[0]&&Math.max(v[0],v[1])<=I[1];
+    }else if(k==="cos"){
+      selfMap=true;
+    }else{
+      selfMap=true;
+    }
+    var xs=[x0],x=x0,failed=false;
+    for(var i=0;i<n;i++){
+      var y=g(x);
+      if(!isFinite(y)||Math.abs(y)>1e6){failed=true;break;}
+      xs.push(y);x=y;
+    }
+    cv.clear();
+    var v=G[k].view,m=frame(ctx,BL,v,v,{xl:"x",yl:"y",xt:5,yt:5});
+    clipBox(ctx,BL);
+    curve(ctx,m,g,v[0],v[1],{color:INK,w:2.2});
+    seg(ctx,m.px(v[0]),m.py(v[0]),m.px(v[1]),m.py(v[1]),{color:INK,dash:[5,4],w:1.4});
+    var pts=[[m.px(xs[0]),m.py(xs[0])]];
+    for(i=0;i<xs.length-1;i++){
+      pts.push([m.px(xs[i]),m.py(xs[i+1])]);
+      pts.push([m.px(xs[i+1]),m.py(xs[i+1])]);
+    }
+    path(ctx,pts,{color:RED,w:1.6});
+    ctx.restore();
+    if(isFinite(inf.fp))dot(ctx,m.px(inf.fp),m.py(inf.fp),4,{fill:false,stroke:RED,w:1.8});
+    dot(ctx,m.px(x0),m.py(x0),3.5,{color:INK});
+
+    var intervalInvariant=xs.every(function(z){return z>=I[0]-1e-10&&z<=I[1]+1e-10;});
+    var allErr=xs.map(function(z){return Math.abs(z-inf.fp);});
+    var L=derivativeBound;
+    var contract=L<1;
+    var boundApplicable=selfMap&&contract&&intervalInvariant&&x0>=I[0]&&x0<=I[1];
+    var ser=allErr.map(function(e){return Math.log10(Math.max(e,1e-14));});
+    var lo=-14,hi=Math.max(1,Math.ceil(Math.max.apply(null,ser))+.5);
+    var m2=frame(ctx,BR,[0,Math.max(25,n)],[lo,hi],{xl:"n",yl:"log₁₀ |xₙ−x*|",xt:5,yt:5});
+    clipBox(ctx,BR);
+    path(ctx,ser.map(function(e,i){return [m2.px(i),m2.py(e)];}),{color:RED,w:2});
+    ctx.restore();
+    ser.forEach(function(e,i){dot(ctx,m2.px(i),m2.py(e),i<=n?3:2,{color:RED});});
+
+    var status=selfMap&&contract?
+      "두 조건 모두 확인됨: Banach 정리의 유일 고정점·수렴 결론 적용 가능.":
+      (!selfMap&&!contract?
+       "자기 사상 조건과 수축 조건이 모두 충족되지 않음.":
+       (!selfMap?"자기 사상 조건 g(I)⊆I가 실패함.":"L<1 수축 조건이 실패함."));
+    var extra=k==="lin"?
+      "선형 함수에서는 |a|<1이면 수축이다. 고정점이 존재하는 경우에도 수축 조건을 별도로 확인해야 한다.":
+      k==="cos"?
+      "I=[0,1]에서 cos(I)=[cos 1,1]⊆I, sup|g′|=sin 1<1.":
+      "I=[1,2]에서 g(I)=[1.5,1.5]가 아니라 [√2,1.5]이며, sup|g′|=1/2<1.";
+
+    ro.innerHTML="xₙ = <b>"+fmt(xs[xs.length-1],6)+"</b> · 고정점 x* = "+fmt(inf.fp,6)+
+      "<br>구간 I=["+I.join(", ")+"] · 자기 사상: <b>"+(selfMap?"충족":"미충족")+
+      "</b> · 수축 조건 L="+fmt(L,4)+"<b>"+(contract?" < 1":" ≥ 1")+"</b><br>"+
+      status+"<br>"+extra+
+      (failed?"<br><span class='r'>반복값이 커지거나 정의역을 벗어나 계산을 중단함.</span>":"")+
+      (!intervalInvariant?"<br><span class='r'>실제 반복 궤도가 선택한 구간 밖으로 나감.</span>":"")+
+      (boundApplicable?"<br>이 구간에서는 Banach 정리의 오차 상계가 적용된다.":"<br>일반적인 Banach 오차 상계를 이 궤도에 적용할 수 없다.")+
+      "<br><span class='m'>고정점 정리는 자기 사상과 수축 조건을 모두 요구한다. 조건 실패는 정리의 적용 실패이지, 그 자체로 고정점의 부재나 반복의 발산을 증명하지 않는다.</span>";
   }
   setup();draw();
 });
@@ -787,37 +1041,94 @@ mount("banach",function(el,cfg){
 /* Lipschitz 연속 (주제 2) */
 mount("lipschitz",function(el,cfg){
   var cv=canvas(el,cfg.h||340),ctx=cv.ctx,bar=ctlBar(el),bar2=ctlBar(el);
-  var F={abs:{n:"|x|",f:Math.abs,d:[-2,2],yr:[-0.5,2.5]},sq:{n:"x²",f:function(x){return x*x;},d:[-2,2],yr:[-0.5,4.5]},
-    sqrt:{n:"√x",f:function(x){return x<0?NaN:Math.sqrt(x);},d:[0,1],yr:[-0.2,1.4]},sin:{n:"sin x",f:Math.sin,d:[-3,3],yr:[-1.6,1.6]},
-    cbrt:{n:"x^(1/3)",f:function(x){return x<0?-Math.pow(-x,1/3):Math.pow(x,1/3);},d:[-1,1],yr:[-1.4,1.4]}};
+  var F={
+    abs:{n:"|x|",f:Math.abs,d:[-2,2],yr:[-0.5,2.5]},
+    sq:{n:"x²",f:function(x){return x*x;},d:[-2,2],yr:[-0.5,4.5]},
+    sqrt:{n:"√x",f:function(x){return x<0?NaN:Math.sqrt(x);},d:[0,1],yr:[-0.2,1.4]},
+    sin:{n:"sin x",f:Math.sin,d:[-3,3],yr:[-1.6,1.6]},
+    cbrt:{n:"x^(1/3)",f:function(x){return x<0?-Math.pow(-x,1/3):Math.pow(x,1/3);},d:[-1,1],yr:[-1.4,1.4]}
+  };
   var fs=select(bar,"함수 f",Object.keys(F).map(function(k){return [k,F[k].n];}),cfg.f||"sq",function(){setup();draw();});
-  var slo=slider(bar,"구간 왼쪽 끝",[-3,2,-2,0.05],draw,function(v){return fmt(v,2);});
-  var shi=slider(bar,"오른쪽 끝",[-2,3,2,0.05],draw,function(v){return fmt(v,2);});
-  var sx=slider(bar2,"원뿔 중심 x₀",[-2,2,0.5,0.05],draw,function(v){return fmt(v,2);});
-  var ro=readout(el),B={x:50,y:24,w:640,h:260};
-  function setup(){var d=F[fs.get()].d;slo.el.min=Math.min(d[0],0)-1;slo.el.max=d[1]-0.1;shi.el.min=d[0]+0.1;shi.el.max=d[1]+1;slo.set(d[0]);shi.set(d[1]);sx.el.min=d[0];sx.el.max=d[1];sx.set((d[0]+d[1])/2+(d[1]-d[0])*0.2);}
-  function Lest(f,a,b,n){var best=0,bi=0,h=(b-a)/n;for(var i=0;i<n;i++){var s=Math.abs((f(a+(i+1)*h)-f(a+i*h))/h);if(s>best){best=s;bi=i;}}return {L:best,x:a+bi*h,h:h};}
+  var slo=slider(bar,"구간 왼쪽 끝",[-3,2,-2,.05],draw,function(v){return fmt(v,2);});
+  var shi=slider(bar,"오른쪽 끝",[-2,3,2,.05],draw,function(v){return fmt(v,2);});
+  var sx=slider(bar2,"중심 x₀",[-2,2,.5,.05],draw,function(v){return fmt(v,2);});
+  var ro=readout(el),B={x:60,y:30,w:620,h:250};
+
+  function setup(){
+    var d=F[fs.get()].d;
+    slo.el.min=d[0];slo.el.max=d[1]-.05;
+    shi.el.min=d[0]+.05;shi.el.max=d[1];
+    slo.set(d[0]);shi.set(d[1]);
+    sx.el.min=d[0];sx.el.max=d[1];sx.set((d[0]+d[1])/2);
+  }
+  function Lest(f,a,b,n){
+    var best=0,bi=a,h=(b-a)/n;
+    for(var i=0;i<n;i++){
+      var x=a+i*h,y=a+(i+1)*h,u=f(x),v=f(y);
+      if(!isFinite(u)||!isFinite(v))continue;
+      var q=Math.abs(v-u)/h;
+      if(q>best){best=q;bi=x;}
+    }
+    return {L:best,x:bi,h:h};
+  }
   X.lipEst=Lest;
+
   function draw(){
-    var k=fs.get(),f=F[k].f,a=slo.get(),b=shi.get();if(b<=a+0.05)b=a+0.05;var x0=clamp(sx.get(),a,b);cv.clear();
-    var xr=[Math.min(F[k].d[0],a)-0.3,Math.max(F[k].d[1],b)+0.3],m=frame(ctx,B,xr,F[k].yr,{xl:"x",yl:"y",xt:8,yt:5});
-    var e1=Lest(f,a,b,200),e2=Lest(f,a,b,2000),L=e1.L,y0=f(x0),bad=0;
+    var k=fs.get(),f=F[k].f,a=slo.get(),b=shi.get();
+    if(b<=a){ro.textContent="구간 오른쪽 끝은 왼쪽 끝보다 커야 합니다.";return;}
+    var x0=clamp(sx.get(),a,b),y0=f(x0);
+    cv.clear();
+    var xr=[Math.min(F[k].d[0],a)-.2,Math.max(F[k].d[1],b)+.2];
+    var m=frame(ctx,B,xr,F[k].yr,{xl:"x",yl:"y",xt:8,yt:5});
+    var e1=Lest(f,a,b,200),e2=Lest(f,a,b,2000);
+    var L=e2.L,viol=0,invalid=0,maxRatio=0;
     clipBox(ctx,B);
-    // cone
-    ctx.save();ctx.beginPath();ctx.moveTo(m.px(a),m.py(y0+L*(a-x0)));ctx.lineTo(m.px(b),m.py(y0+L*(b-x0)));ctx.lineTo(m.px(b),m.py(y0-L*(b-x0)));ctx.lineTo(m.px(a),m.py(y0-L*(a-x0)));ctx.closePath();
-    ctx.fillStyle="rgba(158,43,37,0.07)";ctx.fill();ctx.restore();
-    seg(ctx,m.px(a),m.py(y0+L*(a-x0)),m.px(b),m.py(y0+L*(b-x0)),{color:RED,w:1.2,dash:[5,4]});seg(ctx,m.px(a),m.py(y0-L*(a-x0)),m.px(b),m.py(y0-L*(b-x0)),{color:RED,w:1.2,dash:[5,4]});
+
+    // Correct cone: y0 ± L|x-x0|, with vertex at x0.
+    var upper=[],lower=[];
+    for(var i=0;i<=300;i++){
+      var x=a+(b-a)*i/300,r=L*Math.abs(x-x0);
+      upper.push([m.px(x),m.py(y0+r)]);
+      lower.push([m.px(x),m.py(y0-r)]);
+    }
+    path(ctx,upper,{color:RED,w:1.5,dash:[5,4]});
+    path(ctx,lower,{color:RED,w:1.5,dash:[5,4]});
+
+    curve(ctx,m,f,xr[0],xr[1],{color:GRID,w:1.5,n:500});
+    curve(ctx,m,f,a,b,{color:INK,w:2.5,n:500});
     ctx.restore();
-    // graph on [a,b] thick, outside faint
-    clipBox(ctx,B);curve(ctx,m,f,xr[0],xr[1],{color:G3,w:1.8,n:500});curve(ctx,m,f,a,b,{color:INK,w:2.6,n:500});ctx.restore();
-    for(var i=0;i<=1000;i++){var x=a+(b-a)*i/1000,y=f(x);if(isFinite(y)&&Math.abs(y-y0)>Math.abs(L*(x-x0))+1e-9){bad++;dot(ctx,m.px(x),m.py(y),1.6,{color:RED});}}
-    seg(ctx,m.px(a),B.y+B.h-4,m.px(b),B.y+B.h-4,{color:INK,w:3});
+
+    // Verify the displayed inequality at the same points used for diagnostics.
+    for(i=0;i<=2000;i++){
+      x=a+(b-a)*i/2000;
+      var y=f(x),bound=L*Math.abs(x-x0),diff=Math.abs(y-y0);
+      if(!isFinite(y)){invalid++;continue;}
+      if(diff>bound+1e-8*Math.max(1,diff,bound)){
+        viol++;
+        if(i%10===0)dot(ctx,m.px(x),m.py(y),2,{color:RED});
+      }
+      if(Math.abs(x-x0)>1e-12)maxRatio=Math.max(maxRatio,diff/Math.abs(x-x0));
+    }
     dot(ctx,m.px(x0),m.py(y0),4.5,{color:RED});
-    var ratio=e2.L/e1.L,unb=ratio>1.8&&e2.L>15;
-    var known={abs:"L=1",sq:"L=2·max|x|="+fmt(2*Math.max(Math.abs(a),Math.abs(b)),2),sin:"L=1",sqrt:a>0?"L=1/(2√"+fmt(a,2)+")="+fmt(1/(2*Math.sqrt(a)),2):"유계 아님 (a=0)",cbrt:a<=0&&b>=0?"유계 아님 (x=0 근처)":"유한"}[k];
-    ro.innerHTML="구간 [a,b]=["+fmt(a,2)+", "+fmt(b,2)+"] 에서 기울기의 최댓값 (격자 200칸) <b>L ≈ "+fmt(e1.L,2)+"</b> (x≈"+fmt(e1.x,2)+"), 격자 2000칸 → "+fmt(e2.L,2)+" &nbsp;|&nbsp; 이론 : "+known+"<br>"+
-      (unb?"<span class='r'>격자를 촘촘히 할수록 L이 계속 커진다 → 이 구간에서 f는 Lipschitz가 아니다</span> (|f(x)−f(y)| ≤ L|x−y| 를 만족하는 상수 L이 없음).":"격자를 10배 촘촘히 해도 L이 거의 그대로 → Lipschitz 상수가 존재.")+
-      "<br>붉은 점선 원뿔 : |f(x)−f(x₀)| ≤ L|x−x₀| 가 허용하는 영역. 그래프가 원뿔 안에 있으면 OK, 밖으로 나가는 점은 붉게 표시"+(bad?" → <b>현재 원뿔 밖 점 "+bad+"개</b> (L 추정이 부족).":" (현재 모두 안쪽).");
+
+    var known={
+      abs:"|x|는 전체 실수에서 L=1",
+      sq:"x²의 구간 Lipschitz 상수는 max |2x| = "+fmt(2*Math.max(Math.abs(a),Math.abs(b)),3),
+      sin:"sin x는 전체 실수에서 L=1",
+      sqrt:a>0?"√x의 [a,b]에서 L=1/(2√a) = "+fmt(1/(2*Math.sqrt(a)),3):
+        "√x는 [0,b]에서 Lipschitz 연속이 아님",
+      cbrt:a<=0&&b>=0?"x^(1/3)은 0을 포함하는 구간에서 Lipschitz 연속이 아님":
+        "0에서 떨어진 구간에서는 도함수가 유계"
+    }[k];
+
+    ro.innerHTML="구간 ["+fmt(a,2)+", "+fmt(b,2)+"] · 중심 x₀="+fmt(x0,2)+"<br>"+
+      "최대 인접 차분: 200칸 L≈<b>"+fmt(e1.L,4)+"</b>, 2000칸 L≈<b>"+fmt(e2.L,4)+"</b>.<br>"+
+      "2001개 점에서 관측한 최대 비율 |f(x)−f(x₀)|/|x−x₀| = <b>"+fmt(maxRatio,4)+"</b>."+
+      (viol? "<br><span class='r'>검사한 점 중 "+viol+"개에서 그려진 원뿔 부등식이 위반됨.</span>":
+       "<br>검사한 유한 표본에서는 부등식 위반이 관측되지 않음.")+
+      (invalid?"<br>함수값이 정의되지 않는 검사점: "+invalid+"개.":"")+
+      "<br>이론적 참고: "+known+"."+
+      "<br><span class='m'>격자에서 얻은 L은 표본 기반 추정치일 뿐이다. 표본에서 위반이 없다는 사실만으로 구간 전체의 Lipschitz 조건을 증명할 수는 없다. 빨간 점선은 추정 L로 만든 부등식의 경계다.</span>";
   }
   setup();draw();
 });
@@ -912,7 +1223,7 @@ mount("beta-gamma-solve",function(el,cfg){
   X.bgSolve=solve;
   function draw(){
     var N=sN.get(),S=Math.min(sS.get(),N-1),I=Math.min(sI.get(),N-S),dS=sdS.get(),dI=sdI.get(),r=solve(N,S,I,dS,dI);cv.clear();
-    var xr=[0,Math.max(1,Math.ceil(r.beta*1.6*10)/10+0.2)],yr=[-0.1,Math.max(0.5,Math.ceil(r.gamma*1.8*10)/10+0.2)];
+    var xr=[0,Math.max(1,Math.ceil(r.beta*1.6*10)/10+0.2)],yr=[Math.min(-0.1,Math.floor(r.gamma*1.4*10)/10-0.1),Math.max(0.5,Math.ceil(r.gamma*1.8*10)/10+0.2)];
     var m=frame(ctx,B,xr,yr,{xl:"β",yl:"γ",xt:6,yt:5});clipBox(ctx,B);
     seg(ctx,m.px(xr[0]),m.py(xr[0]),m.px(xr[1]),m.py(xr[1]),{color:G2,dash:[5,4],w:1.3});
     seg(ctx,m.px(r.beta),B.y,m.px(r.beta),B.y+B.h,{color:INK,w:2.2});
@@ -1018,7 +1329,7 @@ mount("kmeans",function(el,cfg){
   var ro=readout(el),B={x:44,y:22,w:360,h:330},BR={x:470,y:22,w:228,h:330},elbow=null;
   button(bar2,"초기화(무작위)",function(){seed=(seed*69069+1)>>>0;init();});
   button(bar2,"한 단계",function(){step();draw();});
-  button(bar2,"수렴까지",function(){var g=0;while(g++<60){var before=A.join(",");step();step();if(A.join(",")===before&&phase==="assign")break;}draw();});
+  button(bar2,"수렴까지",function(){var g=0;while(g++<200){if(phase==="update"){step();}var before=A.join(",");step();step();if(A.join(",")===before){break;}}draw();});
   button(bar2,"나쁜 초기화(한 덩어리에 몰림)",function(){init(true);});
   button(bar2,"새 데이터",function(){seed=(seed*1103515245+12345)>>>0;gen();init();});
   function gen(){var r=rng(seed+100),cs=[[0.25,0.3],[0.72,0.3],[0.5,0.76]];P=[];cs.forEach(function(c){for(var i=0;i<30;i++)P.push([clamp(c[0]+0.075*gauss(r),0.02,0.98),clamp(c[1]+0.075*gauss(r),0.02,0.98)]);});elbow=null;}
