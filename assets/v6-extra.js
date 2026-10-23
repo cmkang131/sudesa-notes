@@ -1190,7 +1190,7 @@ mount("ode-nonunique",function(el,cfg){
 /* ================= Sobol 지수 · β,γ 선형 풀이 (주제 5, 6) ================= */
 function sobolExact(a,b,c){ // f=aβ+bγ+cβγ, β,γ~U[0,1] independent
   var V1=Math.pow(a+c/2,2)/12,V2=Math.pow(b+c/2,2)/12,V12=c*c/144,V=V1+V2+V12;
-  return {V:V,V1:V1,V2:V2,V12:V12,S1:V1/V,S2:V2/V,S12:V12/V,ST1:(V1+V12)/V,ST2:(V2+V12)/V,f0:a/2+b/2+c/4};}
+  return {V:V,V1:V1,V2:V2,V12:V12,S1:V>0?V1/V:NaN,S2:V>0?V2/V:NaN,S12:V>0?V12/V:NaN,ST1:V>0?(V1+V12)/V:NaN,ST2:V>0?(V2+V12)/V:NaN,f0:a/2+b/2+c/4};}
 X.sobolExact=sobolExact;
 function sobolMC(a,b,c,N,seed){ // pick-freeze: Saltelli(2010) first order, Jansen total
   var r=rng(seed),f=function(x,y){return a*x+b*y+c*x*y;},fa=[],fb=[],A=[],Bm=[],i;
@@ -1202,7 +1202,15 @@ function sobolMC(a,b,c,N,seed){ // pick-freeze: Saltelli(2010) first order, Jans
   return {S1:s1/N/v,S2:s2/N/v,ST1:t1/(2*N)/v,ST2:t2/(2*N)/v,V:v};}
 X.sobolMC=sobolMC;
 mount("sobol",function(el,cfg){
-  var cv=canvas(el,cfg.h||340),ctx=cv.ctx,bar=ctlBar(el),bar2=ctlBar(el),mc=null,seed=5;
+  var plot=div(el,"v6x-sobol-plot");
+  plot.style.overflowX="auto";plot.setAttribute("tabindex","0");
+  plot.setAttribute("role","region");plot.setAttribute("aria-label","Sobol 그래프: 작은 화면에서는 좌우로 스크롤");
+  plot.addEventListener("keydown",function(e){if(e.key==="ArrowLeft"||e.key==="ArrowRight")e.stopPropagation();});
+  var cv=canvas(plot,cfg.h||340),ctx=cv.ctx,bar=ctlBar(el),bar2=ctlBar(el),mc=null,seed=5;
+  cv.c.style.minWidth="720px";
+  var hint=div(el,"v6x-cap","작은 화면에서는 그래프를 좌우로 밀어 라벨과 값을 확인하세요.");
+  el.insertBefore(hint,plot);
+  [bar,bar2].forEach(function(b){b.style.rowGap="10px";});
   var sa=slider(bar,"a (β 계수)",[-3,3,1,0.1],reset,function(v){return fmt(v,1);});
   var sb=slider(bar,"b (γ 계수)",[-3,3,2,0.1],reset,function(v){return fmt(v,1);});
   var sc=slider(bar,"c (βγ 계수)",[-3,3,1,0.1],reset,function(v){return fmt(v,1);});
@@ -1228,8 +1236,14 @@ mount("sobol",function(el,cfg){
       if(r[2]!=null)marker(ctx,3,bx+clamp(r[2],0,1)*bw,y+h/2,5,{color:RED,hollow:false});});
     seg(ctx,bx,BR.y,bx,BR.y+BR.h,{color:INK,w:1.4});
     var ex=(E.V===0);
+    if(ex){
+      ro.innerHTML="<b>Var(f)=0: f는 상수 0입니다.</b> 입력이 바뀌어도 출력은 변하지 않습니다.<br>"+
+        "Sobol 지수는 각 성분의 분산을 전체 분산 Var(f)로 나눈 값입니다. 지금은 0/0이므로 <b>모든 Sobol 지수가 정의되지 않습니다.</b> (막대 옆 —)<br>"+
+        "S_β+S_γ+S_βγ=1은 Var(f)&gt;0일 때 성립합니다. a, b, c 중 하나를 0이 아닌 값으로 바꾸면 지수를 비교할 수 있습니다.";
+      return;
+    }
     ro.innerHTML="Var(f) = "+fmt(E.V1*144,3)+"/144 + "+fmt(E.V2*144,3)+"/144 + "+fmt(E.V12*144,3)+"/144 = <b>"+fmt(E.V,4)+"</b> &nbsp;(Var f_β=(a+c/2)²/12, Var f_γ=(b+c/2)²/12, Var f_βγ=c²/144) &nbsp;|&nbsp; f₀=E[f]="+fmt(E.f0,3)+"<br>"+
-      "<b>S_β+S_γ+S_βγ = "+fmt(E.S1+E.S2+E.S12,3)+"</b> (항상 1) · S_β="+fmt(E.S1,3)+", S_γ="+fmt(E.S2,3)+", S_βγ="+fmt(E.S12,3)+" · ST_β=S_β+S_βγ="+fmt(E.ST1,3)+", ST_γ="+fmt(E.ST2,3)+" (합이 1을 넘을 수 있다)<br>"+
+      "<b>S_β+S_γ+S_βγ = "+fmt(E.S1+E.S2+E.S12,3)+"</b> (Var(f)&gt;0일 때 1) · S_β="+fmt(E.S1,3)+", S_γ="+fmt(E.S2,3)+", S_βγ="+fmt(E.S12,3)+" · ST_β=S_β+S_βγ="+fmt(E.ST1,3)+", ST_γ="+fmt(E.ST2,3)+" (합이 1을 넘을 수 있다)<br>"+
       (c===0?"c=0 (상호작용 없음) → S_βγ=0, ST=S : 합이 1.":"지수비 ≠ 계수비 : 상호작용항의 평균 부분이 선형항에 흡수되어 실효 계수가 a+c/2, b+c/2 가 된다. 노트 예(1,2,1)는 S_β=27/103, S_γ=75/103, S_βγ=1/103.")+
       (mc?"<br>pick-freeze 몬테카를로(N=20000) : S_β≈"+fmt(mc.S1,3)+", S_γ≈"+fmt(mc.S2,3)+", ST_β≈"+fmt(mc.ST1,3)+", ST_γ≈"+fmt(mc.ST2,3)+" — 함수식을 몰라도 시뮬레이션 값만으로 계산해 정확값에 가까워진다.":"");
   }
