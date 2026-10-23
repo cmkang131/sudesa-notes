@@ -883,7 +883,7 @@ mount("logistic-cobweb",function(el,cfg){
   function draw(){
     layout();
     var r=sr.get(),x0=sx.get(),n=sn.get(),f=lmap(r);
-    cv.clear();
+    ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.c.width,cv.c.height);ctx.fillStyle="#fff";ctx.fillRect(0,0,cv.c.width,cv.c.height);cv.clear(); // 좁은 화면 캔버스는 기본 clear 범위(720×h)보다 높으므로 전체를 지운다
     var m=frame(ctx,BL,[0,1],[0,1],{xl:"x",yl:"y",xt:5,yt:5});
     clipBox(ctx,BL);
     curve(ctx,m,f,0,1,{color:INK,w:2.2});
