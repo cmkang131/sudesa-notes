@@ -876,7 +876,7 @@ mount("logistic-cobweb",function(el,cfg){
     var nar=(el.clientWidth||720)<560;
     if(nar===narrowMode)return;narrowMode=nar;
     [].forEach.call(el.querySelectorAll("button"),function(bt){bt.style.minHeight=nar?"44px":"";});
-    if(nar){cv.c.width=340*DPR;cv.c.height=620*DPR;BL={x:50,y:24,w:268,h:230};BR={x:50,y:340,w:268,h:230};}
+    if(nar){cv.c.width=300*DPR;cv.c.height=620*DPR;BL={x:44,y:24,w:240,h:230};BR={x:44,y:340,w:240,h:230};}
     else{cv.c.width=720*DPR;cv.c.height=(cfg.h||350)*DPR;BL={x:48,y:28,w:270,h:260};BR={x:390,y:28,w:300,h:260};}
   }
   window.addEventListener("resize",function(){draw();});
@@ -927,7 +927,7 @@ mount("logistic-cobweb",function(el,cfg){
     ro.innerHTML="r="+fmt(r,3)+" · x₀="+fmt(x0,4)+"<br>"+res+
       "<br><br>고정점 x=0, "+(r>1?"x*=1−1/r="+fmt(xf,4)+" · f′(x*)="+fmt(2-r,4):"비영 고정점은 r>1에서 존재")+
       "<br>유한 궤도에서의 평균 log |f′(xₙ)| = "+(lyN?"−∞ (f′=0인 단계 "+lyN+"회: ln 0 = −∞)":fmt(ly/60,4))+
-      "<br><br><span class='m'>평균 Lyapunov 추정치는 길이 60의 궤도에 대한 수치값이며, 그 부호만으로 모든 초기값의 점근 거동을 증명할 수 없다. 0&lt;r≤4에서 [0,1]은 불변 구간이다.</span>";
+      "<br><br><span class='m'>평균 Lyapunov 추정치는 양수이면 가까운 두 시작점이 벌어지는 경향, 음수이면 모이는 경향을 뜻한다. 이 값은 길이 60의 궤도에 대한 수치값이며, 그 부호만으로 모든 초기값의 점근 거동을 증명할 수 없다. 0&lt;r≤4에서 [0,1]은 불변 구간이다.</span>";
   }
   draw();
 });
