@@ -338,8 +338,20 @@ mount("ode-methods",function(el,cfg){
     ["sir","SIR의 I(t)"]
   ],cfg.problem||"decay",draw);
   var sh=slider(bar,"Δt",[.05,2.2,.5,.05],draw,function(v){return fmt(v,2);});
+  /* Keep page-level left/right navigation from consuming slider/select keys. */
+  bar.addEventListener("keydown",function(e){if(e.key==="ArrowLeft"||e.key==="ArrowRight")e.stopPropagation();});
+  bar.querySelectorAll("select,input").forEach(function(e){e.style.minHeight="44px";});
   var ro=readout(el),BL={x:52,y:30,w:320,h:260},BR={x:450,y:30,w:245,h:260};
   var refCache={};
+  function layout(){
+    var w=Math.max(240,Math.min(720,el.clientWidth-24)),stack=w<560;
+    var h=stack?640:370;
+    cv.c.width=Math.round(w*DPR);cv.c.height=h*DPR;
+    cv.c.style.width=w+"px";cv.c.style.maxWidth="100%";
+    cv.clear=function(){ctx.setTransform(DPR,0,0,DPR,0,0);ctx.clearRect(0,0,w,h);ctx.fillStyle="#fff";ctx.fillRect(0,0,w,h);};
+    if(stack){BL={x:48,y:30,w:w-64,h:240};BR={x:48,y:355,w:w-64,h:240};}
+    else{BL={x:52,y:30,w:w*.45-4,h:260};BR={x:w*.64,y:30,w:w*.36-25,h:260};}
+  }
 
   function spec(){
     var p=prob.get();
@@ -361,38 +373,42 @@ mount("ode-methods",function(el,cfg){
   function draw(){
     var p=prob.get(),sp=spec(),ex=exact(sp,p),n=Math.max(1,Math.round(sp.T/sh.get())),h=sp.T/n;
     var eu=euler(sp.f,sp.y0,0,sp.T,h),r3=rk3(sp.f,sp.y0,0,sp.T,h);
-    cv.clear();
+    layout();cv.clear();
     var m=frame(ctx,BL,[0,sp.T],sp.yr,{xl:"t",yl:sp.name});
     clipBox(ctx,BL);
     curve(ctx,m,ex,0,sp.T,{color:INK,w:2.2,n:400});
     path(ctx,eu.t.map(function(t,i){return [m.px(t),m.py(eu.y[i][sp.idx])];}),{color:RED,w:1.6,dash:[4,3]});
-    path(ctx,r3.t.map(function(t,i){return [m.px(t),m.py(r3.y[i][sp.idx])];}),{color:INK,w:1.5});
+    path(ctx,r3.t.map(function(t,i){return [m.px(t),m.py(r3.y[i][sp.idx])];}),{color:INK,w:1.5,dash:[8,4,2,4]});
     ctx.restore();
     legend(ctx,BL.x+BL.w-135,BL.y+16,[
       {label:"참고 해",color:INK},
       {label:"Euler",color:RED,dash:[4,3]},
-      {label:"RK3",color:INK}
+      {label:"RK3",color:INK,dash:[8,4,2,4]}
     ]);
     var hs=[],eE=[],eR=[];
     for(var k=0;k<=12;k++){
-      var hv=.5*Math.pow(2,-k/2);hs.push(hv);
+      var requested=.5*Math.pow(2,-k/2);
+      var hv=sp.T/Math.max(1,Math.round(sp.T/requested));hs.push(hv);
       eE.push(errAt(sp,ex,euler,hv));eR.push(errAt(sp,ex,rk3,hv));
     }
     var all=eE.concat(eR).filter(function(v){return v>0&&isFinite(v);}).map(Math.log10);
     var ylo=Math.max(-14,Math.floor(Math.min.apply(null,all))-1);
     var yhi=Math.ceil(Math.max.apply(null,all))+1;
     var xr=[Math.log10(hs[hs.length-1])-.1,Math.log10(hs[0])+.1];
+    txt(ctx,"오차 비교: 왼쪽일수록 작은 h",BR.x,BR.y-21,{size:12});
     var m2=frame(ctx,BR,xr,[ylo,yhi],{xl:"log₁₀ h",yl:"log₁₀ error",xt:4,yt:4});
     clipBox(ctx,BR);
-    path(ctx,hs.map(function(v,i){return [m2.px(Math.log10(v)),m2.py(Math.log10(Math.max(eE[i],1e-14)))];}),{color:RED,w:2});
-    path(ctx,hs.map(function(v,i){return [m2.px(Math.log10(v)),m2.py(Math.log10(Math.max(eR[i],1e-14)))];}),{color:INK,w:2});
+    path(ctx,hs.map(function(v,i){return [m2.px(Math.log10(v)),m2.py(Math.log10(Math.max(eE[i],1e-14)))];}),{color:RED,w:2,dash:[4,3]});
+    path(ctx,hs.map(function(v,i){return [m2.px(Math.log10(v)),m2.py(Math.log10(Math.max(eR[i],1e-14)))];}),{color:INK,w:2,dash:[8,4,2,4]});
     ctx.restore();
+    legend(ctx,BR.x+10,BR.y+18,[{label:"Euler",color:RED,dash:[4,3]},{label:"RK3",color:INK,dash:[8,4,2,4]}]);
     var ee=errAt(sp,ex,euler,h),er=errAt(sp,ex,rk3,h),warn="";
     if(sp.lambda===-1){
       var z=1-h;
       warn="Euler 증폭인자 q=1−h="+fmt(z,3)+", |q|="+fmt(Math.abs(z),3)+". ";
-      if(h<1)warn+="0<q<1: 비진동 감쇠.";
-      else if(Math.abs(z)<1)warn+="−1<q<0: 진동하면서 감쇠.";
+      if(z===0)warn+="q=0: 한 스텝 뒤 0이 된다. (h=1)";
+      else if(h<1)warn+="0&lt;q&lt;1: 부호를 유지하며 0으로 줄어든다.";
+      else if(Math.abs(z)<1)warn+="−1&lt;q&lt;0: 부호가 번갈아 바뀌며 0으로 줄어든다.";
       else if(Math.abs(z)===1)warn+="|q|=1: 중립 경계, 오차가 감쇠하지 않음.";
       else warn+="|q|>1: 작은 교란이 증폭됨.";
     }else if(sp.lambda===1){
@@ -400,12 +416,14 @@ mount("ode-methods",function(el,cfg){
     }else{
       warn="SIR은 비선형 시스템이므로 단일 λ의 증폭인자만으로 전체 안정성을 판정할 수 없음.";
     }
-    ro.innerHTML="Δt="+fmt(h,3)+" ("+n+" steps) · t=T 오차: Euler <b>"+ee.toExponential(2)+
+    ro.innerHTML="요청 Δt="+fmt(sh.get(),2)+" → 실제 h="+fmt(h,3)+" ("+n+" steps) · t=T 오차: Euler <b>"+ee.toExponential(2)+
       "</b>, RK3 <b>"+er.toExponential(2)+"</b><br>"+warn+
-      "<br>RK3는 스텝당 3회 함수 평가를 사용하는 3차 SSP Runge–Kutta 방법이다. 매끄러운 문제의 충분히 작은 스텝에서는 전역 오차가 대략 O(h³), Euler는 O(h)다."+
-      "<br><span class='m'>오차 기울기는 유한한 h 범위에서 측정한 값이다. 큰 스텝, 부동소수점 한계, SIR의 비선형성 때문에 이론 차수와 정확히 일치하지 않을 수 있다.</span>";
+      "<p style='margin:8px 0 0'>RK3는 스텝당 3회 함수 평가를 사용하는 3차 SSP Runge–Kutta 방법이다. 매끄러운 문제의 충분히 작은 스텝에서는 전역 오차가 대략 O(h³), Euler는 O(h)다.</p>"+
+      "<p style='margin:8px 0 0'>종료 시각 T에 맞게 스텝 수를 정수로 정하므로 실제 h는 요청 Δt와 다를 수 있다. 오차 비교 그래프의 가로축은 실제 h의 log₁₀ 값이다.</p><p style='margin:8px 0 0'>오차 기울기는 유한한 h 범위에서 측정한 값이다. 큰 스텝, 부동소수점 한계, SIR의 비선형성 때문에 이론 차수와 정확히 일치하지 않을 수 있다.</p>";
   }
   draw();
+  var lastWidth=el.clientWidth;
+  if(window.ResizeObserver)new ResizeObserver(function(){if(el.clientWidth!==lastWidth){lastWidth=el.clientWidth;draw();}}).observe(el);
 });
 
 /* 확장 SIR (주제 4, 프로젝트 1) */
