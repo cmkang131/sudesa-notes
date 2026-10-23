@@ -890,18 +890,17 @@ mount("logistic-cobweb",function(el,cfg){
     if(r>1)seg(ctx,BR.x,m2.py(xf),BR.x+BR.w,m2.py(xf),{color:RED,dash:[4,4],w:1});
 
     var at=attractor(r,x0,2000,64),res;
-    if(r<1)res="x=0은 국소 안정: 0<r<1.";
-    else if(r===1)res="r=1: f′(0)=1인 비쌍곡적 경계. 0<x₀<1에서는 xₙ→0이지만 선형 수축률은 아니다.";
-    else if(r<3)res="비영 고정점 x*=1−1/r은 국소 안정 (1<r<3).";
+    if(r<1)res="x=0은 국소 안정: 0&lt;r&lt;1.";
+    else if(r===1)res="r=1: f′(0)=1인 비쌍곡적 경계. 0&lt;x₀&lt;1에서는 xₙ→0이지만 선형 수축률은 아니다.";
+    else if(r<3)res="비영 고정점 x*=1−1/r은 국소 안정 (1&lt;r&lt;3).";
     else if(r===3)res="r=3: 비영 고정점의 경계 f′(x*)=−1. 국소 수렴은 느리며 선형 수축 판정만으로 결론을 내릴 수 없다.";
     else if(r<1+Math.sqrt(6))res="비영 고정점은 불안정. 주기 궤도 또는 과도 거동은 시작점과 매개변수에 따라 달라진다.";
     else res=at.period>1?"수치 탐색에서 "+at.period+"주기 후보가 관측됨.":"긴 과도 구간 뒤에도 유한 탐색만으로 궤도를 확정 분류할 수 없음.";
 
     ro.innerHTML="r="+fmt(r,3)+" · x₀="+fmt(x0,4)+"<br>"+res+
       "<br>고정점 x=0, "+(r>1?"x*=1−1/r="+fmt(xf,4)+" · f′(x*)="+fmt(2-r,4):"비영 고정점은 r>1에서 존재")+
-      "<br>유한 궤도에서의 평균 log |f′(xₙ)| = "+fmt(ly/60,4)+
-      (lyN?" (미분값 0인 단계 "+lyN+"회 포함)": "")+
-      "<br><span class='m'>평균 Lyapunov 추정치는 길이 60의 궤도에 대한 수치값이며, 그 부호만으로 모든 초기값의 점근 거동을 증명할 수 없다. 0<r≤4에서 [0,1]은 불변 구간이다.</span>";
+      "<br>유한 궤도에서의 평균 log |f′(xₙ)| = "+(lyN?"−∞ (f′=0인 단계 "+lyN+"회: ln 0 = −∞)":fmt(ly/60,4))+
+      "<br><span class='m'>평균 Lyapunov 추정치는 길이 60의 궤도에 대한 수치값이며, 그 부호만으로 모든 초기값의 점근 거동을 증명할 수 없다. 0&lt;r≤4에서 [0,1]은 불변 구간이다.</span>";
   }
   draw();
 });
