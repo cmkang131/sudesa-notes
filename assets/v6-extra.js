@@ -90,6 +90,7 @@ function txt(ctx,s,x,y,o){
   ctx.font=(o.weight||"400")+" "+Math.max(12,o.size||12)+"px "+FONT;
   ctx.textAlign=o.align||"left";
   ctx.textBaseline=o.base||"alphabetic";
+  if(o.halo){ctx.save();ctx.strokeStyle="#fff";ctx.lineWidth=o.halo;ctx.lineJoin="round";ctx.strokeText(String(s),x,y);ctx.restore();}
   ctx.fillText(String(s),x,y);
   ctx.restore();
 }
@@ -893,7 +894,7 @@ mount("logistic-cobweb",function(el,cfg){
       var y=f(x);pts.push([m.px(x),m.py(y)],[m.px(y),m.py(y)]);x=y;
     }
     path(ctx,pts,{color:RED,w:1.5});ctx.restore();
-    txt(ctx,"f(x)=rx(1−x)",m.px(.52),m.py(Math.min(.98,r/4)) - 5,{size:12});
+    txt(ctx,"f(x)=rx(1−x)",m.px(.52),Math.max(m.py(Math.min(.98,r/4)) - 5, BL.y + 16),{size:12,halo:3});
     txt(ctx,"y=x",m.px(.9),m.py(.9)+16,{size:12});
     var xf=r>1?1-1/r:0;
     dot(ctx,m.px(xf),m.py(xf),4.5,{fill:false,stroke:RED,w:1.8});
@@ -909,6 +910,12 @@ mount("logistic-cobweb",function(el,cfg){
         xx=f(xx);
       }
     }
+    var lyTxt;
+    if(lyN){
+      if(Math.abs(x0-.5)<1e-12)lyTxt="−∞ — x₀=0.5는 f′(0.5)=0인 임계점이라 첫 항부터 ln 0. 이 경우는 float 오류가 아니라 유한 평균의 참값도 −∞.";
+      else if(Math.abs(r-2)<1e-9)lyTxt="−∞로 표시됨 — r=2의 고정점 x*=0.5는 f′(x*)=0인 초안정 고정점이라 float 궤도가 정확히 0.5에 착지해 머물고, ln 0이 "+lyN+"회 발생. 정확한 실수 궤도는 0.5에 도달하지 않으므로 유한 60단계 평균의 참값은 유한. 다만 점근 λ = −∞는 참값.";
+      else lyTxt="−∞로 표시됨 — float 궤도가 우연히 정확히 0.5에 착지하는 단계가 "+lyN+"회 있어 ln 0 발생. 정확한 실수 궤도는 0.5를 지나지 않으므로 유한 평균의 참값은 유한한 음수. x₀를 아주 조금 바꾸면 유한 추정치로 돌아옴.";
+    }else lyTxt=fmt(ly/60,4);
     var m2=frame(ctx,BR,[0,60],[0,1],{xl:"n",yl:"xₙ",xt:6,yt:5});
     clipBox(ctx,BR);
     path(ctx,ser.map(function(v,i){return [m2.px(i),m2.py(v)];}),{color:INK,w:1.5});
@@ -919,6 +926,7 @@ mount("logistic-cobweb",function(el,cfg){
     var at=attractor(r,x0,2000,64),res;
     if(r<1)res="x=0은 국소 안정: 0&lt;r&lt;1.";
     else if(r===1)res="r=1: f′(0)=1인 비쌍곡적 경계. 0&lt;x₀&lt;1에서는 xₙ→0이지만 선형 수축률은 아니다.";
+    else if(Math.abs(r-2)<1e-9)res="비영 고정점 x*=0.5는 f′(x*)=0인 초안정 고정점 (r=2). 수렴이 2차로 빠르며 점근 Lyapunov 지수는 −∞.";
     else if(r<3)res="비영 고정점 x*=1−1/r은 국소 안정 (1&lt;r&lt;3).";
     else if(r===3)res="r=3: 비영 고정점의 경계 f′(x*)=−1. 국소 수렴은 느리며 선형 수축 판정만으로 결론을 내릴 수 없다.";
     else if(r<1+Math.sqrt(6))res="비영 고정점은 불안정. 주기 궤도 또는 과도 거동은 시작점과 매개변수에 따라 달라진다.";
@@ -926,7 +934,7 @@ mount("logistic-cobweb",function(el,cfg){
 
     ro.innerHTML="r="+fmt(r,3)+" · x₀="+fmt(x0,4)+"<br>"+res+
       "<br><br>고정점 x=0, "+(r>1?"x*=1−1/r="+fmt(xf,4)+" · f′(x*)="+fmt(2-r,4):"비영 고정점은 r>1에서 존재")+
-      "<br>유한 궤도에서의 평균 log |f′(xₙ)| = "+(lyN?"−∞ (f′=0인 단계 "+lyN+"회: ln 0 = −∞)":fmt(ly/60,4))+
+      "<br>유한 궤도에서의 평균 log |f′(xₙ)| (60단계) = "+lyTxt+
       "<br><br><span class='m'>평균 Lyapunov 추정치는 양수이면 가까운 두 시작점이 벌어지는 경향, 음수이면 모이는 경향을 뜻한다. 이 값은 길이 60의 궤도에 대한 수치값이며, 그 부호만으로 모든 초기값의 점근 거동을 증명할 수 없다. 0&lt;r≤4에서 [0,1]은 불변 구간이다.</span>";
   }
   draw();
