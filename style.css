@@ -345,3 +345,8 @@ a.tap:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
   .pnav .pn-r a.tap{white-space:nowrap;padding:8px 30px 8px 12px;font-size:13px}
   .pnav .pn-r a.tap::after{right:10px}
 }
+
+@media (max-width:389px){
+.figwrap{overflow-x:auto}
+#figm-q3-0,#figm-v2-0,#figm-c2-0,#figm-c2-1,#figm-c3-0,#figm-c3-1,#figm-c4-0,#figm-c4-1,#figm-c6-0,#figm-c6-1,#figm-c6-2,#figm-c6-3,#figm-c8-0,#figm-c8-1{min-width:330px}
+}
