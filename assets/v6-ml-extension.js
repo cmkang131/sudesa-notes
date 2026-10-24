@@ -13,9 +13,9 @@ var X={}; /* pure math, local to this file (v6-extra.js owns V6.x) */
 
 /* ---------- css (kept here so only this file is needed) ---------- */
 (function(){
-  if(document.getElementById("v6x-css"))return;
+  if(document.getElementById("v6x-mlcss"))return;
   var s=document.createElement("style");
-  s.id="v6x-css";
+  s.id="v6x-mlcss";
   s.textContent=
     ".v6x-read{margin-top:8px;border-top:1px dashed #1a1a1a;padding-top:7px;font-size:13px;line-height:1.65;color:#1a1a1a;font-family:"+FONT+"}"+
     ".v6x-read b{font-weight:700}.v6x-read .r{color:#9e2b25;font-weight:700}.v6x-read .m{color:#1a1a1a}"+
