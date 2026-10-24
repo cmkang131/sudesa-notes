@@ -997,7 +997,7 @@ mount("logistic-boundary",function(el,cfg){
 
   thetaCtl=slider(
     bar1,
-    "방향 θ (도)",
+    "법선 방향 θ (도)",
     [0,360,30,1],
     function(v){
       theta=clamp(Number(v),0,360);
@@ -1066,12 +1066,12 @@ mount("logistic-boundary",function(el,cfg){
 
   note(
     el,
-    "뉴런 하나의 sigmoid output(시그모이드 출력)은 p=σ(w·x+b)입니다. 아래에서는 방향 θ·크기 |w|·위치 d로 w와 b를 나타냅니다. p≥0.5이면 클래스 1, 그렇지 않으면 클래스 0으로 분류합니다. MLP(다층 퍼셉트론)는 선형 연산과 activation(활성화 함수)을 반복해 분류 라벨을 냅니다."
+    "뉴런 하나의 sigmoid output(시그모이드 출력)은 p=σ(w·x+b)입니다. 아래에서는 법선 방향 각도 θ·크기 |w|·위치 d로 w와 b를 나타냅니다. p≥0.5이면 클래스 1, 그렇지 않으면 클래스 0으로 분류합니다. MLP(다층 퍼셉트론)는 선형 연산과 activation(활성화 함수)을 반복해 분류 라벨을 냅니다."
   );
 
   note(
     el,
-    "z=|w|(cosθ·x₁+sinθ·x₂−d)라 하면 decision boundary(결정 경계)는 z=0, 즉 cosθ·x₁+sinθ·x₂=d인 직선입니다. θ는 경계의 방향, d는 원점에서 경계까지의 부호 있는 거리, |w|는 sigmoid 전이의 가파름만 바꾸고 경계 위치는 바꾸지 않습니다. 직선 하나로는 비선형 패턴을 나눌 수 없어 층을 쌓아 비선형 경계를 표현합니다. 다만 클래스 분포 자체가 겹치면 어떤 경계로도 오분류는 남습니다."
+    "z=|w|(cosθ·x₁+sinθ·x₂−d)라 하면 decision boundary(결정 경계)는 z=0, 즉 cosθ·x₁+sinθ·x₂=d인 직선입니다. θ는 경계의 법선 방향 각도(경계 직선의 방향각은 θ+90°), d는 원점에서 경계까지의 부호 있는 거리, |w|는 sigmoid 전이의 가파름만 바꾸고 경계 위치는 바꾸지 않습니다. 직선 하나로는 비선형 패턴을 나눌 수 없어 층을 쌓아 비선형 경계를 표현합니다. 다만 클래스 분포 자체가 겹치면 어떤 경계로도 오분류는 남습니다."
   );
 
   function sigmoid(z){
@@ -1463,7 +1463,7 @@ mount("logistic-boundary",function(el,cfg){
       return "|w|가 크면 시그모이드 출력이 계단 함수에 가까워집니다. p=0.5 경계 근처에서 출력이 급격히 바뀝니다.";
     }
 
-    return "θ는 경계의 방향, d는 원점에서 경계까지의 거리를 바꿉니다. |w|는 경계를 고정한 채 sigmoid 출력의 전이 가파름만 바꿉니다.";
+    return "θ는 경계의 법선 방향 각도(경계 직선의 방향각은 θ+90°), d는 원점에서 경계까지의 거리를 바꿉니다. |w|는 경계를 고정한 채 sigmoid 출력의 전이 가파름만 바꿉니다.";
   }
 
   function updateReadout(){
