@@ -30,7 +30,8 @@ var X={}; /* pure math, local to this file (v6-extra.js owns V6.x) */
     ".v6x-ctl .v6-btn:active{transform:translateY(1px)}"+
     ".v6x-ctl .v6-btn:disabled{opacity:.55;cursor:not-allowed}"+
     ".v6x-cap{font-size:13px;color:#1a1a1a;margin-top:6px;line-height:1.6}"+
-    ".v6-widget{overflow:hidden}.v6-val{font-variant-numeric:tabular-nums}";
+    ".v6-widget{overflow:hidden}.v6-val{font-variant-numeric:tabular-nums}"+
+    "@media (max-width:560px){.v6-widget[data-widget=loss-landscape],.v6-widget[data-widget=logistic-boundary]{overflow-x:auto}.v6-widget[data-widget=loss-landscape] canvas,.v6-widget[data-widget=logistic-boundary] canvas{min-width:560px}}";
   document.head.appendChild(s);
 })();
 
