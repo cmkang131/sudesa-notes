@@ -1154,7 +1154,8 @@ mount("logistic-boundary",function(el,cfg){
       var w=weights(deg,fixedMag);
 
       for(var bi=0;bi<=100;bi++){
-        var b=-8+bi*0.1;
+        var d=-0.2+bi*0.014;
+        var b=-fixedMag*d;
         var correct=0;
 
         for(var pi=0;pi<points.length;pi++){
@@ -1475,7 +1476,7 @@ mount("logistic-boundary",function(el,cfg){
       s.misclassified+"/"+points.length+
       "<br><b>두 클래스 중심의 sigmoid 출력</b> p₀ = "+
       fmt(s.p0,3)+" · p₁ = "+fmt(s.p1,3)+
-      " · 같은 표본 격자 탐색 최고 정확도 (|w|=12, 3°·0.1 간격) "+
+      " · 같은 표본 격자 탐색 최고 정확도 (|w|=12, θ 3°·d 0.014 간격, d −0.2~1.2) "+
       fmt(100*bestSearch.accuracy,1)+"%"+
       "<br><span class=\"r\">"+teachingSentence(s)+"</span>";
   }
