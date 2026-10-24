@@ -27,7 +27,7 @@ V6.x=X;
     ".v6x-ctl input[type=checkbox]{accent-color:#1a1a1a}"+
     ".v6x-ctl .v6-btn{font:inherit;font-size:13px;min-height:36px;padding:6px 10px;border:1px solid #1a1a1a;border-radius:4px;background:#fff;color:#1a1a1a;cursor:pointer}"+
     ".v6x-ctl .v6-btn:hover,.v6x-ctl .v6-btn.on{background:#1a1a1a;color:#fff}"+
-    ".v6x-ctl .v6-btn:active{transform:translateY(1px)}"+
+    ".v6x-ctl .v6-btn{white-space:nowrap;flex:0 0 auto}"+
     ".v6x-ctl .v6-btn:disabled{opacity:.55;cursor:not-allowed}"+
     ".v6x-cap{font-size:13px;color:#1a1a1a;margin-top:6px;line-height:1.6}"+
     ".v6-widget{overflow:hidden}.v6-val{font-variant-numeric:tabular-nums}";
