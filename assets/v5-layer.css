@@ -138,3 +138,5 @@ html[data-theme="dark"] details.v5d[open]>summary{background:#e0e0e0}
 .body.notes ol.steps.step-label>li{padding-left:5.6em}
 @media(max-width:560px){.body.notes ol.steps.step-label>li{padding-left:5em}}
 @media(max-width:560px){.to-top{position:static;display:block;width:max-content;margin:32px auto 0;clear:both;opacity:1;pointer-events:auto}}
+/* 모바일 토글 표시 보정 (2026-10-24): 기존 CSS의 .phead-r 숨김으로 토글이 안 보이던 문제 */
+@media(max-width:760px){.phead .phead-r{display:block}}
