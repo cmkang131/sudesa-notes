@@ -894,7 +894,7 @@ mount("logistic-cobweb",function(el,cfg){
       var y=f(x);pts.push([m.px(x),m.py(y)],[m.px(y),m.py(y)]);x=y;
     }
     path(ctx,pts,{color:RED,w:1.5});ctx.restore();
-    txt(ctx,"f(x)=rx(1−x)",m.px(.52),Math.max(m.py(Math.min(.98,r/4)) - 5, BL.y + 16),{size:12,halo:3});
+    txt(ctx,"f(x)=rx(1−x)",BL.x+BL.w,BL.y-9,{size:12,align:"right"});
     txt(ctx,"y=x",m.px(.9),m.py(.9)+16,{size:12});
     var xf=r>1?1-1/r:0;
     dot(ctx,m.px(xf),m.py(xf),4.5,{fill:false,stroke:RED,w:1.8});
