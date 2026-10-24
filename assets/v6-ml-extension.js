@@ -31,7 +31,7 @@ var X={}; /* pure math, local to this file (v6-extra.js owns V6.x) */
     ".v6x-ctl .v6-btn:disabled{opacity:.55;cursor:not-allowed}"+
     ".v6x-cap{font-size:13px;color:#1a1a1a;margin-top:6px;line-height:1.6}"+
     ".v6-widget{overflow:hidden}.v6-val{font-variant-numeric:tabular-nums}"+
-    "@media (max-width:560px){.v6-widget[data-widget=loss-landscape],.v6-widget[data-widget=logistic-boundary]{overflow-x:auto}.v6-widget[data-widget=loss-landscape] canvas,.v6-widget[data-widget=logistic-boundary] canvas{min-width:560px}.v6-widget[data-widget=loss-landscape] .v6x-ctl .v6-btn,.v6-widget[data-widget=logistic-boundary] .v6x-ctl .v6-btn{min-height:44px}.v6-widget[data-widget=loss-landscape] .v6x-ctl label,.v6-widget[data-widget=logistic-boundary] .v6x-ctl label{min-height:44px}}";
+    "@media (max-width:560px){.v6-widget[data-widget=loss-landscape],.v6-widget[data-widget=logistic-boundary]{overflow-x:auto}.v6-widget[data-widget=loss-landscape] canvas,.v6-widget[data-widget=logistic-boundary] canvas{min-width:720px}.v6-widget[data-widget=loss-landscape] .v6x-ctl .v6-btn,.v6-widget[data-widget=logistic-boundary] .v6x-ctl .v6-btn{min-height:44px}.v6-widget[data-widget=loss-landscape] .v6x-ctl label,.v6-widget[data-widget=logistic-boundary] .v6x-ctl label{min-height:44px}}";
   document.head.appendChild(s);
 })();
 
@@ -376,7 +376,7 @@ mount("loss-landscape", function(el, cfg) {
 
   note(
     el,
-    "β=전염률, γ=회복률(둘 다 1/day), R₀=β/γ입니다. I(t)는 N=1000명 중 감염자 수(명), 시간은 일(day), 손실은 people²(명²)입니다. 관측값은 I_obs = max(0, I(t)·(1+σZ)) (Z는 표준정규, σ는 무차원 상대 잡음)로 만듭니다. 관측 시점이 하나뿐이면 두 모수가 식별되지 않을 수 있습니다. 오른쪽은 로그 손실을 명암으로 표시합니다."
+    "β=전염률, γ=회복률(둘 다 1/day), R₀=β/γ입니다. I(t)는 N=1000명 중 감염자 수(명), 시간은 일(day), 손실은 people²(명²)입니다. 관측값은 I_obs = max(0, I(t)·(1+σZ)) (Z는 표준정규, σ는 무차원 상대 잡음)로 만듭니다. 관측 시점이 너무 적으면 두 모수를 식별하기 어렵습니다. 오른쪽은 로그 손실을 명암으로 표시하며, 격자 손실은 계산 비용을 줄이기 위해 RK4 간격 0.2일의 근사 궤적으로 계산합니다(후보 곡선·손실은 0.1일)."
   );
 
   var out = readout(el);
@@ -1148,11 +1148,11 @@ mount("logistic-boundary",function(el,cfg){
     var bestBias=-3;
     var fixedMag=12;
 
-    for(var deg=0;deg<=179;deg+=3){
+    for(var deg=0;deg<=357;deg+=3){
       var w=weights(deg,fixedMag);
 
-      for(var bi=0;bi<=50;bi++){
-        var b=-8+bi*0.2;
+      for(var bi=0;bi<=100;bi++){
+        var b=-8+bi*0.1;
         var correct=0;
 
         for(var pi=0;pi<points.length;pi++){
@@ -1473,7 +1473,7 @@ mount("logistic-boundary",function(el,cfg){
       s.misclassified+"/"+points.length+
       "<br><b>두 클래스 중심의 sigmoid 출력</b> p₀ = "+
       fmt(s.p0,3)+" · p₁ = "+fmt(s.p1,3)+
-      " · 같은 표본 격자 탐색 최고 정확도 (|w|=12, 3°·0.2 간격) "+
+      " · 같은 표본 격자 탐색 최고 정확도 (|w|=12, 3°·0.1 간격) "+
       fmt(100*bestSearch.accuracy,1)+"%"+
       "<br><span class=\"r\">"+teachingSentence(s)+"</span>";
   }
