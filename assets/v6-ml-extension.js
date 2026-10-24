@@ -971,7 +971,7 @@ mount("logistic-boundary",function(el,cfg){
 
   var theta=30;
   var magnitude=8;
-  var bias=-3;
+  var offset=0.375;
   var overlap=0.4;
   var seed=432432;
   var settingControls=false;
@@ -988,7 +988,7 @@ mount("logistic-boundary",function(el,cfg){
 
   var thetaCtl;
   var magnitudeCtl;
-  var biasCtl;
+  var offsetCtl;
   var overlapCtl;
 
   var cv=canvas(el,H);
@@ -1017,15 +1017,15 @@ mount("logistic-boundary",function(el,cfg){
     function(v){return fmt(v,1);}
   );
 
-  biasCtl=slider(
+  offsetCtl=slider(
     bar1,
-    "절편 b",
-    [-8,2,-3,0.1],
+    "경계 위치 d",
+    [-0.2,1.2,0.375,0.01],
     function(v){
-      bias=clamp(Number(v),-8,2);
+      offset=clamp(Number(v),-0.2,1.2);
       if(!settingControls) drawAll();
     },
-    function(v){return fmt(v,1);}
+    function(v){return fmt(v,2);}
   );
 
   overlapCtl=slider(
@@ -1047,11 +1047,11 @@ mount("logistic-boundary",function(el,cfg){
     settingControls=true;
     thetaCtl.set(bestSearch.theta);
     magnitudeCtl.set(12);
-    biasCtl.set(bestSearch.bias);
+    offsetCtl.set(-bestSearch.bias/12);
 
     theta=bestSearch.theta;
     magnitude=12;
-    bias=bestSearch.bias;
+    offset=-bestSearch.bias/12;
 
     settingControls=false;
     drawAll();
@@ -1066,12 +1066,12 @@ mount("logistic-boundary",function(el,cfg){
 
   note(
     el,
-    "뉴런 하나의 sigmoid output(시그모이드 출력)은 p=σ(w₁x₁+w₂x₂+b)입니다. p≥0.5이면 클래스 1, 그렇지 않으면 클래스 0으로 분류합니다. MLP(다층 퍼셉트론)는 선형 연산과 activation(활성화 함수)을 반복해 분류 라벨을 냅니다."
+    "뉴런 하나의 sigmoid output(시그모이드 출력)은 p=σ(w·x+b)입니다. 아래에서는 방향 θ·크기 |w|·위치 d로 w와 b를 나타냅니다. p≥0.5이면 클래스 1, 그렇지 않으면 클래스 0으로 분류합니다. MLP(다층 퍼셉트론)는 선형 연산과 activation(활성화 함수)을 반복해 분류 라벨을 냅니다."
   );
 
   note(
     el,
-    "decision boundary(결정 경계)는 p=0.5, 즉 w₁x₁+w₂x₂+b=0인 직선입니다. w는 경계의 법선 방향, |w|는 시그모이드 전이의 가파름, b는 경계 위치를 정합니다. 직선 하나로는 비선형 패턴을 나눌 수 없어 층을 쌓아 비선형 경계를 표현합니다. 다만 클래스 분포 자체가 겹치면 어떤 경계로도 오분류는 남습니다."
+    "z=|w|(cosθ·x₁+sinθ·x₂−d)라 하면 decision boundary(결정 경계)는 z=0, 즉 cosθ·x₁+sinθ·x₂=d인 직선입니다. θ는 경계의 방향, d는 원점에서 경계까지의 부호 있는 거리, |w|는 sigmoid 전이의 가파름만 바꾸고 경계 위치는 바꾸지 않습니다. 직선 하나로는 비선형 패턴을 나눌 수 없어 층을 쌓아 비선형 경계를 표현합니다. 다만 클래스 분포 자체가 겹치면 어떤 경계로도 오분류는 남습니다."
   );
 
   function sigmoid(z){
@@ -1082,6 +1082,8 @@ mount("logistic-boundary",function(el,cfg){
     var e2=Math.exp(z);
     return e2/(1+e2);
   }
+
+  function curBias(){return -magnitude*offset;}
 
   function weights(angleDeg,mag){
     var a=angleDeg*Math.PI/180;
@@ -1097,12 +1099,12 @@ mount("logistic-boundary",function(el,cfg){
 
   function probability(x,y,angleDeg,mag,b){
     var w=weights(angleDeg,mag);
-    return sigmoid(w.x*x+w.y*y+b);
+    return sigmoid(w.x*x+w.y*y+curBias());
   }
 
   function classify(x,y,angleDeg,mag,b){
     var w=weights(angleDeg,mag);
-    return w.x*x+w.y*y+b>=0?1:0;
+    return w.x*x+w.y*y+curBias()>=0?1:0;
   }
 
   function makeBlob(random,cx,cy,n,label){
@@ -1181,7 +1183,7 @@ mount("logistic-boundary",function(el,cfg){
     var w=weights(theta,magnitude);
     var pts=[];
     var eps=1e-8;
-    var target=level-bias;
+    var target=level-curBias();
 
     function add(x,y){
       if(!isFinite(x)||!isFinite(y)) return;
@@ -1319,7 +1321,7 @@ mount("logistic-boundary",function(el,cfg){
 
       for(var i=0;i<NCELLS;i++){
         var x=(i+0.5)/NCELLS;
-        var p=probability(x,y,theta,magnitude,bias);
+        var p=probability(x,y,theta,magnitude);
         var shade=Math.round(255-76.5*p);
 
         ctx.fillStyle="rgb("+shade+","+shade+","+shade+")";
@@ -1340,7 +1342,7 @@ mount("logistic-boundary",function(el,cfg){
       var p=points[i];
       var px=f.px(p.x);
       var py=f.py(p.y);
-      var predicted=classify(p.x,p.y,theta,magnitude,bias);
+      var predicted=classify(p.x,p.y,theta,magnitude);
       var wrong=predicted!==p.label;
 
       if(p.label===0){
@@ -1431,7 +1433,7 @@ mount("logistic-boundary",function(el,cfg){
 
     for(var i=0;i<points.length;i++){
       var p=points[i];
-      var predicted=classify(p.x,p.y,theta,magnitude,bias);
+      var predicted=classify(p.x,p.y,theta,magnitude);
 
       if(predicted===p.label){
         correct++;
@@ -1443,8 +1445,8 @@ mount("logistic-boundary",function(el,cfg){
     return {
       accuracy:correct/points.length,
       misclassified:misclassified,
-      p0:probability(center0.x,center0.y,theta,magnitude,bias),
-      p1:probability(center1.x,center1.y,theta,magnitude,bias)
+      p0:probability(center0.x,center0.y,theta,magnitude),
+      p1:probability(center1.x,center1.y,theta,magnitude)
     };
   }
 
@@ -1461,7 +1463,7 @@ mount("logistic-boundary",function(el,cfg){
       return "|w|가 크면 시그모이드 출력이 계단 함수에 가까워집니다. p=0.5 경계 근처에서 출력이 급격히 바뀝니다.";
     }
 
-    return "w는 경계의 법선 방향이고 b는 위치를 바꿉니다. |w|를 바꾸면 경계의 방향보다 sigmoid 출력의 전이 가파름이 달라집니다.";
+    return "θ는 경계의 방향, d는 원점에서 경계까지의 거리를 바꿉니다. |w|는 경계를 고정한 채 sigmoid 출력의 전이 가파름만 바꿉니다.";
   }
 
   function updateReadout(){
