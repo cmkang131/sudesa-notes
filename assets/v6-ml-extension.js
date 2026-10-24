@@ -31,7 +31,7 @@ var X={}; /* pure math, local to this file (v6-extra.js owns V6.x) */
     ".v6x-ctl .v6-btn:disabled{opacity:.55;cursor:not-allowed}"+
     ".v6x-cap{font-size:13px;color:#1a1a1a;margin-top:6px;line-height:1.6}"+
     ".v6-widget{overflow:hidden}.v6-val{font-variant-numeric:tabular-nums}"+
-    "@media (max-width:560px){.v6-widget[data-widget=loss-landscape],.v6-widget[data-widget=logistic-boundary]{overflow-x:auto}.v6-widget[data-widget=loss-landscape] canvas,.v6-widget[data-widget=logistic-boundary] canvas{min-width:560px}}";
+    "@media (max-width:560px){.v6-widget[data-widget=loss-landscape],.v6-widget[data-widget=logistic-boundary]{overflow-x:auto}.v6-widget[data-widget=loss-landscape] canvas,.v6-widget[data-widget=logistic-boundary] canvas{min-width:560px}.v6-widget[data-widget=loss-landscape] .v6x-ctl .v6-btn,.v6-widget[data-widget=logistic-boundary] .v6x-ctl .v6-btn{min-height:44px}.v6-widget[data-widget=loss-landscape] .v6x-ctl label,.v6-widget[data-widget=logistic-boundary] .v6x-ctl label{min-height:44px}}";
   document.head.appendChild(s);
 })();
 
@@ -173,7 +173,7 @@ function arrow(ctx,x0,y0,x1,y1,o){o=o||{};seg(ctx,x0,y0,x1,y1,o);var a=Math.atan
   ctx.save();ctx.fillStyle=o.color||INK;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x1-s*Math.cos(a-.4),y1-s*Math.sin(a-.4));
   ctx.lineTo(x1-s*Math.cos(a+.4),y1-s*Math.sin(a+.4));ctx.closePath();ctx.fill();ctx.restore();}
 X.names=[];X.fns={};
-function mount(name,fn){var w=function(el,cfg){if(el.hasAttribute("data-v6x"))return;el.setAttribute("data-v6x",name);V6.title(el,cfg.title);fn(el,cfg||{});};X.names.push(name);X.fns[name]=function(el,cfg){w(el,cfg);refont(el);};V6.register(name,X.fns[name]);}
+function mount(name,fn){var w=function(el,cfg){if(el.hasAttribute("data-v6x"))return;el.setAttribute("data-v6x",name);cfg=cfg||{};V6.title(el,cfg.title);fn(el,cfg);};X.names.push(name);X.fns[name]=function(el,cfg){w(el,cfg);refont(el);};V6.register(name,X.fns[name]);}
 function refont(el){ /* redraw once webfont is ready (canvas text is drawn before Noto Sans KR loads) */
   if(!(document.fonts&&document.fonts.ready))return;
   document.fonts.ready.then(function(){var r=el.querySelector("input[type=range]");if(r){r.dispatchEvent(new Event("input"));return;}var s=el.querySelector("select");if(s)s.dispatchEvent(new Event("change"));});}
@@ -324,7 +324,7 @@ mount("loss-landscape", function(el, cfg) {
 
   sigmaCtl = slider(
     bar2,
-    "잡음 σ",
+    "상대 잡음 σ",
     [0, 0.35, 0.12, 0.01],
     function(v) {
       sigma = clamp(Number(v), 0, 0.35);
@@ -376,7 +376,7 @@ mount("loss-landscape", function(el, cfg) {
 
   note(
     el,
-    "β=전염률, γ=회복률(둘 다 1/day), R₀=β/γ입니다. I(t)는 N=1000명 중 감염자 수(명), 시간은 일(day), 손실은 people²(명²)입니다. 관측 시점이 하나뿐이면 두 모수가 식별되지 않을 수 있습니다. 오른쪽은 로그 손실을 명암으로 표시합니다."
+    "β=전염률, γ=회복률(둘 다 1/day), R₀=β/γ입니다. I(t)는 N=1000명 중 감염자 수(명), 시간은 일(day), 손실은 people²(명²)입니다. 관측값은 I_obs = max(0, I(t)·(1+σZ)) (Z는 표준정규, σ는 무차원 상대 잡음)로 만듭니다. 관측 시점이 하나뿐이면 두 모수가 식별되지 않을 수 있습니다. 오른쪽은 로그 손실을 명암으로 표시합니다."
   );
 
   var out = readout(el);
@@ -943,18 +943,16 @@ mount("loss-landscape", function(el, cfg) {
 
   function candidateChanged() {
     candidateSol = simulate(candBeta, candGamma, 0.1);
-    candidateLossSol = simulate(candBeta, candGamma, GRID_DT);
+    candidateLossSol = candidateSol;
     candidateLoss = lossFromSolution(candidateLossSol);
 
-    drawLeft();
-    drawRightFromCache();
-    updateReadout();
+    drawAll();
   }
 
   precomputeGridTrajectories();
 
   candidateSol = simulate(candBeta, candGamma, 0.1);
-  candidateLossSol = simulate(candBeta, candGamma, GRID_DT);
+  candidateLossSol = candidateSol;
 
   refreshDataAndGrid();
 });
@@ -1032,7 +1030,7 @@ mount("logistic-boundary",function(el,cfg){
 
   overlapCtl=slider(
     bar2,
-    "겹침 (중심 거리)",
+    "클래스 중심 거리",
     [0.18,0.55,0.4,0.01],
     function(v){
       overlap=clamp(Number(v),0.18,0.55);
@@ -1043,7 +1041,7 @@ mount("logistic-boundary",function(el,cfg){
     function(v){return fmt(v,2);}
   );
 
-  button(bar2,"정확도 최대 경계 찾기",function(){
+  button(bar2,"격자 탐색 최고 경계",function(){
     if(!bestSearch) return;
 
     settingControls=true;
@@ -1073,7 +1071,7 @@ mount("logistic-boundary",function(el,cfg){
 
   note(
     el,
-    "decision boundary(결정 경계)는 p=0.5, 즉 w₁x₁+w₂x₂+b=0인 직선입니다. w는 경계의 법선 방향, |w|는 시그모이드 전이의 가파름, b는 경계 위치를 정합니다. 겹치는 데이터는 직선 하나로 완전히 나누기 어려워 층을 쌓습니다."
+    "decision boundary(결정 경계)는 p=0.5, 즉 w₁x₁+w₂x₂+b=0인 직선입니다. w는 경계의 법선 방향, |w|는 시그모이드 전이의 가파름, b는 경계 위치를 정합니다. 직선 하나로는 비선형 패턴을 나눌 수 없어 층을 쌓아 비선형 경계를 표현합니다. 다만 클래스 분포 자체가 겹치면 어떤 경계로도 오분류는 남습니다."
   );
 
   function sigmoid(z){
@@ -1110,8 +1108,14 @@ mount("logistic-boundary",function(el,cfg){
   function makeBlob(random,cx,cy,n,label){
     var arr=[];
     for(var i=0;i<n;i++){
-      var x=clamp(cx+SD*gauss(random),0,1);
-      var y=clamp(cy+SD*gauss(random),0,1);
+      var x,y,tries=0;
+      do{
+        x=cx+SD*gauss(random);
+        y=cy+SD*gauss(random);
+        tries++;
+      }while((x<0||x>1||y<0||y>1)&&tries<40);
+      x=clamp(x,0.005,0.995);
+      y=clamp(y,0.005,0.995);
       arr.push({x:x,y:y,label:label});
     }
     return arr;
@@ -1446,7 +1450,7 @@ mount("logistic-boundary",function(el,cfg){
 
   function teachingSentence(stats){
     if(overlap<=0.30 && bestSearch.accuracy<0.90){
-      return "두 클래스가 많이 겹쳐 최선의 직선도 정확도 90%에 못 미칩니다. 뉴런 하나의 직선 경계로는 겹치는 데이터를 완전히 분리할 수 없어 층을 쌓습니다.";
+      return "현재 표본에서 격자로 탐색한 최고 정확도가 90%에 못 미칩니다. 클래스 분포가 실제로 겹치면 어떤 경계를 써도 오분류가 남고, 비선형 경계가 필요한 패턴은 층을 쌓아 표현합니다.";
     }
 
     if(magnitude<4){
@@ -1464,12 +1468,12 @@ mount("logistic-boundary",function(el,cfg){
     var s=currentStats();
 
     out.innerHTML=
-      "<b>정확도</b> <span class=\"r\">"+
+      "<b>현재 표본 정확도</b> <span class=\"r\">"+
       fmt(100*s.accuracy,1)+"%</span> · 오분류 "+
       s.misclassified+"/"+points.length+
       "<br><b>두 클래스 중심의 sigmoid 출력</b> p₀ = "+
       fmt(s.p0,3)+" · p₁ = "+fmt(s.p1,3)+
-      " · 최대 탐색 정확도 (|w|=12) "+
+      " · 같은 표본 격자 탐색 최고 정확도 (|w|=12, 3°·0.2 간격) "+
       fmt(100*bestSearch.accuracy,1)+"%"+
       "<br><span class=\"r\">"+teachingSentence(s)+"</span>";
   }
