@@ -241,7 +241,7 @@ p.plain-note{margin:.45em 0 .45em 0;line-height:1.55}
 .notes h2{margin:36px 0 12px}
 /* 표 (kit v3: 여백·크기) */
 .tbl{font-size:15px;font-variant-numeric:tabular-nums}
-.tbl th,.tbl td{padding:9px 12px;line-height:1.65}
+.tbl th,.tbl td{padding:10px 12px;line-height:1.7}
 /* 디스플레이 수식 (kit v3) */
 .mjx-display{margin:.8em 0}
 .notes li .mjx-display,.bx li .mjx-display,.concept li .mjx-display,.step-body .mjx-display{text-align:left;margin:.55em 0}
