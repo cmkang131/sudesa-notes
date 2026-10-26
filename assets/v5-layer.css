@@ -106,20 +106,20 @@ a.tap:hover::after{color:var(--ink)}
 
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 
-/* 12. 다크 모드 (invert 방식 유지). 홈 index도 동일 규칙 */
-html[data-theme="dark"]{filter:invert(1) hue-rotate(180deg);background:#ededed}
-html[data-theme="dark"] body,html[data-theme="dark"] .paper{background:#ededed}
-html[data-theme="dark"] svg,html[data-theme="dark"] figure{background:transparent}
-html[data-theme="dark"] :is(.card,a.tap,.tapc,details.v5d,.dx-body,.concept,.mid-box,.mid-cheat,.problem,.bx,.nb,.fbox,.tblwrap,table,nav.v5-toc,.to-top,.pnav a,.v5-pn a,.stat,.notice,.theme-toggle,.tblwrap.long thead th){background-color:#ededed}
-html[data-theme="dark"] .tblwrap.can-r::after{background:linear-gradient(to right,rgba(237,237,237,0),#ededed)}
-html[data-theme="dark"] svg [fill="#fff"],html[data-theme="dark"] svg [fill="#ffffff"]{fill:#ededed}
-html[data-theme="dark"] svg [fill="#f2f2f2"]{fill:#e0e0e0}
-html[data-theme="dark"] details.v5d[open]>summary{background:#e0e0e0}
+/* 12. 다크 모드 (2026-10-27: 실제 팔레트. 반전 필터 폐기. 변수 정의는 style.css 다크 블록) */
+@media screen{
+html[data-theme="dark"] body details.v5d{background:var(--surf)}
+html[data-theme="dark"] :is(.card,a.tap,.tapc,.dx-body,.problem,.bx,.nb,.fbox,table,nav.v5-toc,.to-top,.stat,.notice){background-color:var(--surf)}
+html[data-theme="dark"] .pnav a,html[data-theme="dark"] .v5-pn a{background:var(--surf)}
+html[data-theme="dark"] .tblwrap.long thead th{background:var(--paper)}
+html[data-theme="dark"] .tblwrap.can-r::after{background:linear-gradient(to right,rgba(19,20,23,0),var(--paper))}
+html[data-theme="dark"] .tblwrap.can-r{box-shadow:inset -1px 0 0 var(--line2)}
+}
 
 /* 13. 인쇄 */
 @media print{
   .phead .theme-toggle,.v5-bar,.to-top,.skip-link,.v5-anchor,nav.v5-toc,.pnav,.v5-pn,.theme-toggle{display:none!important}
-  html[data-theme="dark"]{filter:none;background:#fff}
+  html[data-theme="dark"]{background:#fff}
   html[data-theme="dark"] body,html[data-theme="dark"] .paper{background:#fff}
   body details.v5d{border:none}
   body details.v5d>summary{border:none;background:none;padding-left:0;font-size:13px;color:var(--gray)}

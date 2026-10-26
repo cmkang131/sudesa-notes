@@ -79,3 +79,33 @@ details.v6-collapse[open]>summary::before{content:"▾ "}
 .static-widget .v6x-read table{border-collapse:collapse;margin:4px 0}
 .static-widget .v6x-read td,.static-widget .v6x-read th{border:1px solid #1a1a1a;padding:3px 8px;font-size:13px}
 .static-widget .v6x-cap{font-size:13px;color:#1a1a1a;margin-top:6px;line-height:1.6}
+
+/* dark theme (2026-10-27): 실제 팔레트. 변수는 style.css 다크 블록에서 정의. 반전 필터 폐기 */
+@media screen{
+html[data-theme="dark"] .v6-def,html[data-theme="dark"] .v6-thm,html[data-theme="dark"] .v6-example,html[data-theme="dark"] .v6-mistake,html[data-theme="dark"] .v6-keyformula,html[data-theme="dark"] .v6-steps,html[data-theme="dark"] .v6-selfcheck{background:var(--surf);border-color:var(--rule);color:var(--ink)}
+html[data-theme="dark"] .v6-mistake{border-left-color:var(--accent)}
+html[data-theme="dark"] .v6-mistake::before{color:var(--accent)}
+html[data-theme="dark"] .v6-steps .v6-step::before{border-color:var(--rule)}
+html[data-theme="dark"] .v6-steps .v6-why{color:#a6abb3}
+html[data-theme="dark"] .v6-steps .v6-why::before{color:var(--accent)}
+html[data-theme="dark"] details.v6-selfcheck>summary::before{color:var(--accent)}
+html[data-theme="dark"] details.v6-selfcheck>summary::after{color:var(--gray)}
+html[data-theme="dark"] details.v6-selfcheck>.v6-ans{border-top-color:var(--bord)}
+html[data-theme="dark"] details.v6-collapse{border-color:var(--bord)}
+html[data-theme="dark"] details.v6-collapse>summary::before{color:var(--accent)}
+html[data-theme="dark"] .v6-hover{border-bottom-color:var(--accent)}
+html[data-theme="dark"] .v6-hover>.v6-hover-pop{background:var(--surf2);border-color:var(--bord);box-shadow:2px 2px 0 #000}
+html[data-theme="dark"] .v6-widget{background:var(--surf);border-color:var(--rule)}
+html[data-theme="dark"] .v6-widget canvas{background:var(--paper)}
+html[data-theme="dark"] .v6-btn,html[data-theme="dark"] .v6-widget button{background:var(--surf);border-color:var(--bord);color:var(--ink)}
+html[data-theme="dark"] .v6-widget button:hover:not(:disabled){background:var(--ink);color:#131417}
+html[data-theme="dark"] .v6-widget button:active:not(:disabled){background:var(--accent);border-color:var(--accent);color:#fff}
+html[data-theme="dark"] .v6-controls input[type=range],html[data-theme="dark"] .v6-widget input[type=range]{accent-color:var(--accent)}
+html[data-theme="dark"] .v6-controls .v6-pos,html[data-theme="dark"] .v6-widget .v6-pos{color:#a6abb3}
+html[data-theme="dark"] .v6-state td,html[data-theme="dark"] .v6-state th{border-color:var(--bord)}
+html[data-theme="dark"] .static-widget .v6x-read{border-top-color:var(--bord);color:var(--ink)}
+html[data-theme="dark"] .static-widget .v6x-read .r{color:var(--accent)}
+html[data-theme="dark"] .static-widget .v6x-read .m{color:var(--ink)}
+html[data-theme="dark"] .static-widget .v6x-read td,html[data-theme="dark"] .static-widget .v6x-read th{border-color:var(--bord)}
+html[data-theme="dark"] .static-widget .v6x-cap{color:var(--ink)}
+}
