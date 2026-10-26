@@ -56,16 +56,12 @@
 
 <div class="figwrap static-widget">
 <div class="v6-title">은닉층 하나 = 선형 → 활성화 → 선형 합</div>
-<img src="assets/static/c6-nn-layers.png" alt="은닉층 하나 = 선형 → 활성화 → 선형 합">
-<div class="v6-params">기본값: w₁ 6.0 · b₁ -2.0 · w₂ -5.0 · b₂ 4.0 · α₁ 1.5 · α₂ 1.0 · B -0.5</div>
-<div class="v6x-read">구조: x → <b>선형</b>(wx+b) → <b>비선형 σ</b> → <b>선형 합</b>(α·n+B) = 합성함수 &nbsp;|&nbsp; 미지수 : w,b가 2개씩 + α 2개 + B = <b>7</b> = (d+2)N+1 (d=1, N=2)<br>σ(wx+b)=σ(w(x−b′)), b′=−b/w : neuron 1 중심 b′₁ = <b>0.33</b>, neuron 2 중심 b′₂ = <b>0.80</b> (그 점에서 σ=½). |w|가 클수록 가파른 계단(step)에 가까워진다.</div>
+<div class="bx"><p>구조: x → 선형(wx+b) → 비선형 σ → 선형 합(α·n+B) = 합성함수  |  미지수 : w,b가 2개씩 + α 2개 + B = 7 = (d+2)N+1 (d=1, N=2)</p><p>σ(wx+b)=σ(w(x−b′)), b′=−b/w : neuron 1 중심 b′₁ = 0.33, neuron 2 중심 b′₂ = 0.80 (그 점에서 σ=½). |w|가 클수록 가파른 계단(step)에 가까워진다.</p></div>
 </div>
 
 <div class="figwrap static-widget">
 <div class="v6-title">합성함수 f∘g: 안쪽과 바깥쪽, 순서가 중요</div>
-<img src="assets/static/c6-compose.png" alt="합성함수 f∘g: 안쪽과 바깥쪽, 순서가 중요">
-<div class="v6-params">기본값: a 1.5 · b -1.0 · 입력 x 0.80</div>
-<div class="v6x-read">x=0.800 → g(x)=0.20000 → f(g(x))=0.20000<br>g(f(x))=0.20000<br>연쇄법칙: f′(g(x))g′(x)=1.500000 · 수치 미분=1.500000 (일치)<br><span class="m">합성 f∘g가 정의되려면 g(x)가 f의 정의역에 속해야 한다. 연쇄법칙은 g가 x에서, f가 g(x)에서 미분 가능할 때 적용한다. 유한 차분은 수치 검산이며 증명은 아니다.</span></div>
+<div class="bx"><p>x=0.800 → g(x)=0.20000 → f(g(x))=0.20000</p><p>g(f(x))=0.20000</p><p>연쇄법칙: f′(g(x))g′(x)=1.500000 · 수치 미분=1.500000 (일치)</p><p>합성 f∘g가 정의되려면 g(x)가 f의 정의역에 속해야 한다. 연쇄법칙은 g가 x에서, f가 g(x)에서 미분 가능할 때 적용한다. 유한 차분은 수치 검산이며 증명은 아니다.</p></div>
 </div>
 
 <div class="bx"><div class="bx-title">Weierstrass와 UAT</div>
@@ -95,9 +91,7 @@
 
 <div class="figwrap static-widget">
 <div class="v6-title">UAT의 구성: 계단 두 개의 차(box)로 조각 상수 근사</div>
-<img src="assets/static/c6-uat.png" alt="UAT의 구성: 계단 두 개의 차(box)로 조각 상수 근사">
-<div class="v6-params">기본값: N 6 · log₁₀ w w=100</div>
-<div class="v6x-read">그림의 목표 함수는 f(x) = sin(2πx), x ∈ [0, 1]이다. 이를 N = 6개 구간으로 나누고, 각 구간 중앙의 f 값을 높이로 하는 box들의 합으로 근사한 뒤, [0, 1]의 801개 표본에서 측정한 최대 절댓값 오차는 <b>0.316242</b>이다. 이 값은 유한 표본에서 측정한 최댓값이며, 연속 구간 전체의 sup norm 오차를 증명하지 않는다.<br>Sigmoid neuron 12개 · w=100<br>각 box의 높이는 구간 중앙의 f 값이다. sigmoid 두 개의 차로 매끄러운 계단 근사를 만들며, 유한한 w에서는 경계가 완전히 날카롭지 않다. 끝점의 출력도 별도로 확인해야 한다.<br><span class="m">오른쪽 그래프는 같은 801개 표본에서 구한 근사 오차를 N에 따라 나타낸다. 로그 그래프에서는 0 오차를 그릴 수 없으므로 1e-12를 시각화에만 사용한다. 수치 하한을 실제 오차로 해석하면 안 된다.</span><br><span class="m">UAT는 적절한 신경망 파라미터가 존재한다는 정리이지, 이 구성의 오차가 항상 단조 감소한다거나 학습 알고리즘이 그 파라미터를 찾는다는 보장은 아니다. 유한 표본의 최댓값 역시 연속 구간 전체의 sup norm을 증명하지 않는다.</span></div>
+<div class="bx"><p>그림의 목표 함수는 f(x) = sin(2πx), x ∈ [0, 1]이다. 이를 N = 6개 구간으로 나누고, 각 구간 중앙의 f 값을 높이로 하는 box들의 합으로 근사한 뒤, [0, 1]의 801개 표본에서 측정한 최대 절댓값 오차는 0.316242이다. 이 값은 유한 표본에서 측정한 최댓값이며, 연속 구간 전체의 sup norm 오차를 증명하지 않는다.</p><p>Sigmoid neuron 12개 · w=100</p><p>각 box의 높이는 구간 중앙의 f 값이다. sigmoid 두 개의 차로 매끄러운 계단 근사를 만들며, 유한한 w에서는 경계가 완전히 날카롭지 않다. 끝점의 출력도 별도로 확인해야 한다.</p><p>오른쪽 그래프는 같은 801개 표본에서 구한 근사 오차를 N에 따라 나타낸다. 로그 그래프에서는 0 오차를 그릴 수 없으므로 1e-12를 시각화에만 사용한다. 수치 하한을 실제 오차로 해석하면 안 된다.</p><p>UAT는 적절한 신경망 파라미터가 존재한다는 정리이지, 이 구성의 오차가 항상 단조 감소한다거나 학습 알고리즘이 그 파라미터를 찾는다는 보장은 아니다. 유한 표본의 최댓값 역시 연속 구간 전체의 sup norm을 증명하지 않는다.</p></div>
 </div>
 
 <section class="sec"><div class="bx-title"><span class="mjx"><svg style="vertical-align: -0.439ex;" xmlns="http://www.w3.org/2000/svg" width="3.606ex" height="2.034ex" role="img" focusable="false" viewBox="0 -705 1593.7 899" xmlns:xlink="http://www.w3.org/1999/xlink"><defs><path id="c6-268" d="M308 24Q367 24 416 76T466 197Q466 260 414 284Q308 311 278 321T236 341Q176 383 176 462Q176 523 208 573T273 648Q302 673 343 688T407 704H418H425Q521 704 564 640Q565 640 577 653T603 682T623 704Q624 704 627 704T632 705Q645 705 645 698T617 577T585 459T569 456Q549 456 549 465Q549 471 550 475Q550 478 551 494T553 520Q553 554 544 579T526 616T501 641Q465 662 419 662Q362 662 313 616T263 510Q263 480 278 458T319 427Q323 425 389 408T456 390Q490 379 522 342T554 242Q554 216 546 186Q541 164 528 137T492 78T426 18T332 -20Q320 -22 298 -22Q199 -22 144 33L134 44L106 13Q83 -14 78 -18T65 -22Q52 -22 52 -14Q52 -11 110 221Q112 227 130 227H143Q149 221 149 216Q149 214 148 207T144 186T142 153Q144 114 160 87T203 47T255 29T308 24Z"></path><path id="c6-269" d="M78 35T78 60T94 103T137 121Q165 121 187 96T210 8Q210 -27 201 -60T180 -117T154 -158T130 -185T117 -194Q113 -194 104 -185T95 -172Q95 -168 106 -156T131 -126T157 -76T173 -3V9L172 8Q170 7 167 6T161 3T152 1T140 0Q113 0 96 17Z"></path><path id="c6-270" d="M43 1Q26 1 26 10Q26 12 29 24Q34 43 39 45Q42 46 54 46H60Q120 46 136 53Q137 53 138 54Q143 56 149 77T198 273Q210 318 216 344Q286 624 286 626Q284 630 284 631Q274 637 213 637H193Q184 643 189 662Q193 677 195 680T209 683H213Q285 681 359 681Q481 681 487 683H497Q504 676 504 672T501 655T494 639Q491 637 471 637Q440 637 407 634Q393 631 388 623Q381 609 337 432Q326 385 315 341Q245 65 245 59Q245 52 255 50T307 46H339Q345 38 345 37T342 19Q338 6 332 0H316Q279 2 179 2Q143 2 113 2T65 2T43 1Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><use data-c="1D446" href="#c6-268"></use></g><g data-mml-node="mo" transform="translate(645,0)"><use data-c="2C" href="#c6-269"></use></g><g data-mml-node="mi" transform="translate(1089.7,0)"><use data-c="1D43C" href="#c6-270"></use></g></g></g></svg></span> 데이터로 <span class="mjx"><svg style="vertical-align: -0.489ex;" xmlns="http://www.w3.org/2000/svg" width="3.515ex" height="2.084ex" role="img" focusable="false" viewBox="0 -705 1553.7 921" xmlns:xlink="http://www.w3.org/1999/xlink"><defs><path id="c6-271" d="M29 -194Q23 -188 23 -186Q23 -183 102 134T186 465Q208 533 243 584T309 658Q365 705 429 705H431Q493 705 533 667T573 570Q573 465 469 396L482 383Q533 332 533 252Q533 139 448 65T257 -10Q227 -10 203 -2T165 17T143 40T131 59T126 65L62 -188Q60 -194 42 -194H29ZM353 431Q392 431 427 419L432 422Q436 426 439 429T449 439T461 453T472 471T484 495T493 524T501 560Q503 569 503 593Q503 611 502 616Q487 667 426 667Q384 667 347 643T286 582T247 514T224 455Q219 439 186 308T152 168Q151 163 151 147Q151 99 173 68Q204 26 260 26Q302 26 349 51T425 137Q441 171 449 214T457 279Q457 337 422 372Q380 358 347 358H337Q258 358 258 389Q258 396 261 403Q275 431 353 431Z"></path><path id="c6-272" d="M78 35T78 60T94 103T137 121Q165 121 187 96T210 8Q210 -27 201 -60T180 -117T154 -158T130 -185T117 -194Q113 -194 104 -185T95 -172Q95 -168 106 -156T131 -126T157 -76T173 -3V9L172 8Q170 7 167 6T161 3T152 1T140 0Q113 0 96 17Z"></path><path id="c6-273" d="M31 249Q11 249 11 258Q11 275 26 304T66 365T129 418T206 441Q233 441 239 440Q287 429 318 386T371 255Q385 195 385 170Q385 166 386 166L398 193Q418 244 443 300T486 391T508 430Q510 431 524 431H537Q543 425 543 422Q543 418 522 378T463 251T391 71Q385 55 378 6T357 -100Q341 -165 330 -190T303 -216Q286 -216 286 -188Q286 -138 340 32L346 51L347 69Q348 79 348 100Q348 257 291 317Q251 355 196 355Q148 355 108 329T51 260Q49 251 47 251Q45 249 31 249Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><use data-c="1D6FD" href="#c6-271"></use></g><g data-mml-node="mo" transform="translate(566,0)"><use data-c="2C" href="#c6-272"></use></g><g data-mml-node="mi" transform="translate(1010.7,0)"><use data-c="1D6FE" href="#c6-273"></use></g></g></g></svg></span> 찾기</div>
@@ -116,16 +110,12 @@
 
 <div class="figwrap static-widget">
 <div class="v6-title">S, I, 변화율로부터 β, γ 풀기 (2×2 선형계)</div>
-<img src="assets/static/c6-beta-gamma-solve.png" alt="S, I, 변화율로부터 β, γ 풀기 (2×2 선형계)">
-<div class="v6-params">기본값: N 100 · S 80 · I 10 · dS/dt -2.0 · dI/dt 1.0</div>
-<div class="v6x-read">행렬 A = [ −IS/N , 0 ; IS/N , −I ] = [ −8.00 , 0 ; 8.00 , −10 ], <b>det A = I²S/N = 80.00 ≠ 0</b> (S,I&gt;0) → 역행렬 존재<br><b>β = 0.250</b>, <b>γ = 0.100</b>, R₀ = β/γ = 2.50 &gt; 1, 유효재생산수 R_eff=βS/(γN)=2.00 &gt; 1 → 현재 시점에서는 감염자가 증가한다 (R₀&gt;1이 유행의 무한한 지속을 보장하는 것은 아니다)<br><span class="m">두 식의 그래프(선)의 교점이 (β,γ). 노트 예 N=100,S=80,I=10,dS/dt=−2,dI/dt=1 → β=1/4, γ=1/10, R₀=2.5. 날짜가 여러 개면 식이 쌓여 최소제곱 AᵀAθ=Aᵀb.</span></div>
+<div class="bx"><p>행렬 A = [ −IS/N , 0 ; IS/N , −I ] = [ −8.00 , 0 ; 8.00 , −10 ], det A = I²S/N = 80.00 ≠ 0 (S,I&gt;0) → 역행렬 존재</p><p>β = 0.250, γ = 0.100, R₀ = β/γ = 2.50 &gt; 1, 유효재생산수 R_eff=βS/(γN)=2.00 &gt; 1 → 현재 시점에서는 감염자가 증가한다 (R₀&gt;1이 유행의 무한한 지속을 보장하는 것은 아니다)</p><p>두 식의 그래프(선)의 교점이 (β,γ). 노트 예 N=100,S=80,I=10,dS/dt=−2,dI/dt=1 → β=1/4, γ=1/10, R₀=2.5. 날짜가 여러 개면 식이 쌓여 최소제곱 AᵀAθ=Aᵀb.</p></div>
 </div>
 
 <div class="figwrap static-widget">
 <div class="v6-title">손실 지형: 제곱오차를 최소화하는 (β, γ) 찾기</div>
-<img src="assets/static/c6-loss-landscape.png" alt="손실 지형: 제곱오차를 최소화하는 (β, γ) 찾기">
-<div class="v6-params">기본값: 후보 β (1/day) 0.300 · 후보 γ (1/day) 0.200 · 관측 시점 수 k 8 · 상대 잡음 σ 0.12</div>
-<div class="v6x-read"><b>후보 손실</b> L = <span class="r">100800 people²</span> · R₀ = β/γ = 1.500 (참값 3.214)<br><b>격자 최솟값</b> L = 165.3 people² · (β̂, γ̂) = (0.450, 0.160) 1/day · 참값과의 거리 = 0.0200 1/day<br><span class="r">관측 시점이 늘면 모수 조합을 구분하기 쉬워질 수 있습니다. 잡음과 관측 시점의 배치도 추정 결과에 영향을 줍니다.</span></div>
+<div class="bx"><p>후보 손실 L = 100800 people² · R₀ = β/γ = 1.500 (참값 3.214)</p><p>격자 최솟값 L = 165.3 people² · (β̂, γ̂) = (0.450, 0.160) 1/day · 참값과의 거리 = 0.0200 1/day</p><p>관측 시점이 늘면 모수 조합을 구분하기 쉬워질 수 있습니다. 잡음과 관측 시점의 배치도 추정 결과에 영향을 줍니다.</p></div>
 <div class="v6x-cap">loss landscape(손실 지형): 각 (β, γ)에서 SIR 모형(감수성–감염–회복)의 궤적을 구하고, 관측 I(t)와의 squared-error loss(제곱오차 손실)를 합산합니다. 손실이 가장 작은 격자점은 least squares(최소제곱) 추정값의 근사입니다.</div>
 </div>
 
@@ -178,9 +168,7 @@
 
 <div class="figwrap static-widget">
 <div class="v6-title">고정점 반복과 수축: 오차가 Lⁿ으로 준다</div>
-<img src="assets/static/c6-banach.png" alt="고정점 반복과 수축: 오차가 Lⁿ으로 준다">
-<div class="v6-params">기본값: a 0.60 · x₀ 0.50 · 반복 n 6</div>
-<div class="v6x-read">xₙ = <b>2.406688</b> · 고정점 x* = 2.500000<br>구간 I=[-1, 6] · 자기 사상: <b>충족</b> · 수축 조건 L=0.6000<b> &lt; 1</b><br>두 조건 모두 확인됨: Banach 정리의 유일 고정점·수렴 결론 적용 가능.<br>선형 함수에서는 |a|&lt;1이면 수축이다. 고정점이 존재하는 경우에도 수축 조건을 별도로 확인해야 한다.<br>이 구간에서는 Banach 정리의 오차 상계가 적용된다.<br><span class="m">고정점 정리는 자기 사상과 수축 조건을 모두 요구한다. 조건 실패는 정리의 적용 실패이지, 그 자체로 고정점의 부재나 반복의 발산을 증명하지 않는다.</span></div>
+<div class="bx"><p>xₙ = 2.406688 · 고정점 x* = 2.500000</p><p>구간 I=[-1, 6] · 자기 사상: 충족 · 수축 조건 L=0.6000 &lt; 1</p><p>두 조건 모두 확인됨: Banach 정리의 유일 고정점·수렴 결론 적용 가능.</p><p>선형 함수에서는 |a|&lt;1이면 수축이다. 고정점이 존재하는 경우에도 수축 조건을 별도로 확인해야 한다.</p><p>이 구간에서는 Banach 정리의 오차 상계가 적용된다.</p><p>고정점 정리는 자기 사상과 수축 조건을 모두 요구한다. 조건 실패는 정리의 적용 실패이지, 그 자체로 고정점의 부재나 반복의 발산을 증명하지 않는다.</p></div>
 </div>
 
 <section class="sec"><div class="bx-title">신경망 <span class="mjx"><svg style="vertical-align: 0;" xmlns="http://www.w3.org/2000/svg" width="1.593ex" height="1.532ex" role="img" focusable="false" viewBox="0 -677 704 677" xmlns:xlink="http://www.w3.org/1999/xlink"><defs><path id="c6-437" d="M40 437Q21 437 21 445Q21 450 37 501T71 602L88 651Q93 669 101 677H569H659Q691 677 697 676T704 667Q704 661 687 553T668 444Q668 437 649 437Q640 437 637 437T631 442L629 445Q629 451 635 490T641 551Q641 586 628 604T573 629Q568 630 515 631Q469 631 457 630T439 622Q438 621 368 343T298 60Q298 48 386 46Q418 46 427 45T436 36Q436 31 433 22Q429 4 424 1L422 0Q419 0 415 0Q410 0 363 1T228 2Q99 2 64 0H49Q43 6 43 9T45 27Q49 40 55 46H83H94Q174 46 189 55Q190 56 191 56Q196 59 201 76T241 233Q258 301 269 344Q339 619 339 625Q339 630 310 630H279Q212 630 191 624Q146 614 121 583T67 467Q60 445 57 441T43 437H40Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><use data-c="1D447" href="#c6-437"></use></g></g></g></svg></span>의 contraction 조건</div>

@@ -72,9 +72,7 @@
 
 <div class="figwrap static-widget">
 <div class="v6-title">logistic map cobweb: r을 움직여 보기</div>
-<img src="assets/static/c7-logistic-cobweb.png" alt="logistic map cobweb: r을 움직여 보기">
-<div class="v6-params">기본값: r 3.20 · x₀ 0.20 · 반복 횟수 20</div>
-<div class="v6x-read">r=3.200 · x₀=0.2000<br>비영 고정점은 불안정. 주기 궤도 또는 과도 거동은 시작점과 매개변수에 따라 달라진다.<br><br>고정점 x=0, x*=1−1/r=0.6875 · f′(x*)=-1.2000<br>유한 궤도에서의 평균 log |f′(xₙ)| (60단계) = -0.9179<br><br><span class="m">평균 Lyapunov 추정치는 양수이면 가까운 두 시작점이 벌어지는 경향, 음수이면 모이는 경향을 뜻한다. 이 값은 길이 60의 궤도에 대한 수치값이며, 그 부호만으로 모든 초기값의 점근 거동을 증명할 수 없다. 0&lt;r≤4에서 [0,1]은 불변 구간이다.</span></div>
+<div class="bx"><p>r=3.200 · x₀=0.2000</p><p>비영 고정점은 불안정. 주기 궤도 또는 과도 거동은 시작점과 매개변수에 따라 달라진다.</p><p>고정점 x=0, x*=1−1/r=0.6875 · f′(x*)=-1.2000</p><p>유한 궤도에서의 평균 log |f′(xₙ)| (60단계) = -0.9179</p><p>평균 Lyapunov 추정치는 양수이면 가까운 두 시작점이 벌어지는 경향, 음수이면 모이는 경향을 뜻한다. 이 값은 길이 60의 궤도에 대한 수치값이며, 그 부호만으로 모든 초기값의 점근 거동을 증명할 수 없다. 0&lt;r≤4에서 [0,1]은 불변 구간이다.</p></div>
 </div>
 
 <section class="sec"><div class="bx-title"><span class="mjx"><svg style="vertical-align: -0.025ex;" xmlns="http://www.w3.org/2000/svg" width="1.02ex" height="1.025ex" role="img" focusable="false" viewBox="0 -442 451 453" xmlns:xlink="http://www.w3.org/1999/xlink"><defs><path id="c7-290" d="M21 287Q22 290 23 295T28 317T38 348T53 381T73 411T99 433T132 442Q161 442 183 430T214 408T225 388Q227 382 228 382T236 389Q284 441 347 441H350Q398 441 422 400Q430 381 430 363Q430 333 417 315T391 292T366 288Q346 288 334 299T322 328Q322 376 378 392Q356 405 342 405Q286 405 239 331Q229 315 224 298T190 165Q156 25 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 114 189T154 366Q154 405 128 405Q107 405 92 377T68 316T57 280Q55 278 41 278H27Q21 284 21 287Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><use data-c="1D45F" href="#c7-290"></use></g></g></g></svg></span>에 따른 거동과 bifurcation diagram</div>
@@ -101,9 +99,7 @@
 
 <div class="figwrap static-widget">
 <div class="v6-title">bifurcation diagram: 주기 두배화와 카오스</div>
-<img src="assets/static/c7-bifurcation.png" alt="bifurcation diagram: 주기 두배화와 카오스">
-<div class="v6-params">기본값: r 시작 2.50 · r 끝 4.00 · 버리는 횟수(transient) 100 · 표시할 r 3.200</div>
-<div class="v6x-read">r = <b>3.200</b> : <span class="r">2주기</span> (0.5130, 0.7995) &nbsp;|&nbsp; Lyapunov λ = -0.916<br>각 r마다 x₀=0.5에서 시작해 앞쪽 100번을 버리고 그 뒤 130개를 찍은 것. 점 1개 → 2개 → 4개 …로 갈라지는 <b>period doubling</b>이 쌓여 카오스(띠)가 되고, 그 안에 주기 3 같은 창이 다시 나타난다. 붉은 점 = 선택한 r의 장기 거동.</div>
+<div class="bx"><p>r = 3.200 : 2주기 (0.5130, 0.7995)  |  Lyapunov λ = -0.916</p><p>각 r마다 x₀=0.5에서 시작해 앞쪽 100번을 버리고 그 뒤 130개를 찍은 것. 점 1개 → 2개 → 4개 …로 갈라지는 period doubling이 쌓여 카오스(띠)가 되고, 그 안에 주기 3 같은 창이 다시 나타난다. 붉은 점 = 선택한 r의 장기 거동.</p></div>
 </div>
 
 <div class="bx"><div class="bx-title">고정점(fixed point)과 안정성(stability)</div>

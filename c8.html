@@ -41,9 +41,7 @@
 </section>
 <div class="figwrap static-widget">
 <div class="v6-title">뉴런 하나의 결정 경계: 직선 하나로 두 클래스 나누기</div>
-<img src="assets/static/c8-logistic-boundary.png" alt="뉴런 하나의 결정 경계: 직선 하나로 두 클래스 나누기">
-<div class="v6-params">기본값: 법선 방향 θ (도) 30° · 크기 |w| 8.0 · 경계 위치 d 0.38 · 클래스 중심 거리 0.40</div>
-<div class="v6x-read"><b>현재 표본 정확도</b> <span class="r">58.9%</span> · 오분류 37/90<br><b>두 클래스 중심의 sigmoid 출력</b> p₀ = 0.746 · p₁ = 0.979 · 같은 표본 격자 탐색 최고 정확도 (|w|=12, θ 3°·d 0.014 간격, d −0.2~1.2) 98.9%<br><span class="r">θ는 경계의 법선 방향 각도(경계 직선의 방향각은 θ+90°), d는 원점에서 경계까지의 거리를 바꿉니다. |w|는 경계를 고정한 채 sigmoid 출력의 전이 가파름만 바꿉니다.</span></div>
+<div class="bx"><p>현재 표본 정확도 58.9% · 오분류 37/90</p><p>두 클래스 중심의 sigmoid 출력 p₀ = 0.746 · p₁ = 0.979 · 같은 표본 격자 탐색 최고 정확도 (|w|=12, θ 3°·d 0.014 간격, d −0.2~1.2) 98.9%</p><p>θ는 경계의 법선 방향 각도(경계 직선의 방향각은 θ+90°), d는 원점에서 경계까지의 거리를 바꿉니다. |w|는 경계를 고정한 채 sigmoid 출력의 전이 가파름만 바꿉니다.</p></div>
 <div class="v6x-cap">뉴런 하나의 sigmoid output(시그모이드 출력)은 p=σ(w·x+b)입니다. 아래에서는 법선 방향 각도 θ·크기 |w|·위치 d로 w와 b를 나타냅니다. p≥0.5이면 클래스 1, 그렇지 않으면 클래스 0으로 분류합니다. MLP(다층 퍼셉트론)는 선형 연산과 activation(활성화 함수)을 반복해 분류 라벨을 냅니다.</div>
 </div>
 
@@ -68,9 +66,7 @@
 
 <div class="figwrap static-widget">
 <div class="v6-title">random walk: 분산은 시간에 선형 (Var = 2Dt)</div>
-<img src="assets/static/c8-random-walk.png" alt="random walk: 분산은 시간에 선형 (Var = 2Dt)">
-<div class="v6-params">기본값: 스텝 수 k (시간 t=kΔt) 60 · 오른쪽 확률 p 0.50 · 공간 간격 Δx 1.0</div>
-<div class="v6x-read">k = <b>60</b>, 걸음꾼 2000명 &nbsp;|&nbsp; 평균 : 표본 -0.16 · 이론 (2p−1)kΔx = 0.00 &nbsp;|&nbsp; 분산 : 표본 <b>58.54</b> · 이론 4p(1−p)kΔx² = <b>60.00</b><br>검은 점 = 정확한 확률 C(k,A)pᴬqᴮ (A=오른쪽 걸음 수, 위치 n=A−B), 붉은 곡선 = 가우스 근사. 대칭 random walk(p=1/2)에서는 분산이 Var(X_k)=kΔx²=<b>2Dt</b>이다. 여기서 t=kΔt, D=Δx²/(2Δt)이다. 따라서 random walk와 확산 방정식의 Gaussian 해는 분산이 일치한다. 다만 유한한 k에서의 random walk 분포는 이산적이며, Gaussian 분포와의 일치는 연속 극한에서 성립하고 유한한 스텝 수에서는 근사로 이해해야 한다. 분산이 t에 <b>선형</b>으로 커지는 것을 k를 움직여 확인.<br><span class="m">k와 위치의 홀짝이 같은 칸에만 걸음꾼이 있다 (k+n 이 홀수면 확률 0).</span></div>
+<div class="bx"><p>k = 60, 걸음꾼 2000명  |  평균 : 표본 -0.16 · 이론 (2p−1)kΔx = 0.00  |  분산 : 표본 58.54 · 이론 4p(1−p)kΔx² = 60.00</p><p>검은 점 = 정확한 확률 C(k,A)pᴬqᴮ (A=오른쪽 걸음 수, 위치 n=A−B), 붉은 곡선 = 가우스 근사. 대칭 random walk(p=1/2)에서는 분산이 Var(X_k)=kΔx²=2Dt이다. 여기서 t=kΔt, D=Δx²/(2Δt)이다. 따라서 random walk와 확산 방정식의 Gaussian 해는 분산이 일치한다. 다만 유한한 k에서의 random walk 분포는 이산적이며, Gaussian 분포와의 일치는 연속 극한에서 성립하고 유한한 스텝 수에서는 근사로 이해해야 한다. 분산이 t에 선형으로 커지는 것을 k를 움직여 확인.</p><p>k와 위치의 홀짝이 같은 칸에만 걸음꾼이 있다 (k+n 이 홀수면 확률 0).</p></div>
 </div>
 
 <div class="bx"><div class="bx-title">continuous limit과 heat equation</div>
@@ -101,9 +97,7 @@
 
 <div class="figwrap static-widget">
 <div class="v6-title">왜 가우스 모양인가: 표준화한 합의 분포 (CLT)</div>
-<img src="assets/static/c8-clt.png" alt="왜 가우스 모양인가: 표준화한 합의 분포 (CLT)">
-<div class="v6-params">기본값: 표본 크기 n 1</div>
-<div class="v6x-read">n = <b>1</b> (M=2500번 반복) &nbsp;|&nbsp; Z의 표본평균 0.007 (이론 0), 표준편차 0.974 (이론 1) &nbsp;|&nbsp; 왜도 1.792 (이론 γ/√n = 2.000) &nbsp;|&nbsp; N(0,1)과의 최대 CDF 차이 <b>0.159</b><br>원래 분포가 어떤 모양이든(치우침·불연속) n이 커지면 표준화한 평균의 분포가 N(0,1)로 간다. 치우친 분포(지수, 베르누이)는 n이 작을 때 왜도가 남고 √n에 반비례로 줄어든다. 동전(±1)의 n번 합 = random walk의 위치 (주제 8).</div>
+<div class="bx"><p>n = 1 (M=2500번 반복)  |  Z의 표본평균 0.007 (이론 0), 표준편차 0.974 (이론 1)  |  왜도 1.792 (이론 γ/√n = 2.000)  |  N(0,1)과의 최대 CDF 차이 0.159</p><p>원래 분포가 어떤 모양이든(치우침·불연속) n이 커지면 표준화한 평균의 분포가 N(0,1)로 간다. 치우친 분포(지수, 베르누이)는 n이 작을 때 왜도가 남고 √n에 반비례로 줄어든다. 동전(±1)의 n번 합 = random walk의 위치 (주제 8).</p></div>
 </div><p class="plain-note"><b>CLT 적용 조건:</b> 독립·동일분포인 확률변수들이 유한한 평균 μ와 양의 유한한 분산 σ²을 가지면, 적절히 표준화한 표본평균은 n→∞에서 N(0,1) 분포로 수렴한다. 원래 분포가 비대칭이거나 이산형이어도 성립할 수 있다. 왜도가 γ/√n으로 감소한다는 관계는 독립·동일분포 표본에서 분산이 유한하고 3차 절대 모멘트도 유한할 때 적용된다.</p>
 </div><div class="pnav"><a href="c7.html">&lsaquo; 이전 주제</a><a href="index.html">홈으로</a><span></span></div>
 <script>window.__prev="c7.html";window.__next=null;(function(){var p=window.__prev,d=window.__next;document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'&&d)location.href=d;else if(e.key==='ArrowLeft'&&p)location.href=p;});})();</script>
